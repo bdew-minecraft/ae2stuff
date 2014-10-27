@@ -4,29 +4,27 @@ import java.util
 
 import appeng.api.AEApi
 import appeng.api.networking._
-import appeng.api.util.{DimensionalCoord, AEColor, AECableType}
+import appeng.api.util.{AECableType, AEColor, DimensionalCoord}
 import net.bdew.lib.tile.TileExtended
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
-
-import scala.reflect.ClassTag
 
 trait GridTile extends TileExtended with IGridHost with IGridBlock {
   var node: IGridNode = null
   var initialized = false
 
-  serverTick.listen(()=>{
+  serverTick.listen(() => {
     if (!initialized)
       getNode.updateState()
   })
 
-  persistSave.listen((tag)=>{
-    if (node!=null)
+  persistSave.listen((tag) => {
+    if (node != null)
       node.saveToNBT("ae_node", tag)
   })
 
-  persistLoad.listen((tag)=>{
-    if (node!=null)
+  persistLoad.listen((tag) => {
+    if (node != null)
       node.destroy()
     node = AEApi.instance().createGridNode(this)
     node.loadFromNBT("ae_node", tag)

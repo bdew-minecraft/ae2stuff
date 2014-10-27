@@ -14,7 +14,7 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
 
   addSlotToContainer(new SlotFakeCraftingResult(te, te.slots.result, 104, 35))
   addSlotToContainer(new SlotValidating(te, te.slots.patterns, 143, 17))
-  addSlotToContainer(new SlotValidating(te, te.slots.encoded, 143, 53))
+  addSlotToContainer(new SlotFakeEncodedPattern(te, te.slots.encoded, 143, 53))
 
   def updateRecipe() {
     val c = new InventoryCrafting(this, 3, 3)
@@ -24,13 +24,13 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
     te.setInventorySlotContents(te.slots.result, r)
   }
 
-  override def slotClick(slotnum: Int, button: Int, modifiers: Int, player: EntityPlayer): ItemStack = {
+  override def slotClick(slotNum: Int, button: Int, modifiers: Int, player: EntityPlayer): ItemStack = {
     // This is a hacky workaround!
     // When a player changes the contents of a slot, isChangingQuantityOnly is set to true,
     // preventing updates to OTHER slots from being detected and sent back
     // Here i ensure changes are sent back before returning so NetHandlerPlayServer.processClickWindow doesn't
     // get the opportunity to mess things up
-    val r = super.slotClick(slotnum, button, modifiers, player)
+    val r = super.slotClick(slotNum, button, modifiers, player)
     detectAndSendChanges()
     r
   }

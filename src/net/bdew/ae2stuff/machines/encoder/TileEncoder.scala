@@ -57,13 +57,6 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     newStack
   }
 
-  def takeEncodedPattern() = {
-    if (!worldObj.isRemote) {
-      super.decrStackSize(slots.patterns, 1)
-    }
-    getStackInSlot(slots.encoded)
-  }
-
   // Inventory stuff
 
   allowSided = true
@@ -71,23 +64,6 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
   override def getAccessibleSlotsFromSide(side: Int) = Array(slots.patterns)
   override def isItemValidForSlot(slot: Int, stack: ItemStack) =
     slot == slots.patterns && blankPattern.sameAsStack(stack)
-
-
-  // Grid Stuff
-
-  override def setInventorySlotContents(slot: Int, stack: ItemStack) = {
-    if (slot == slots.encoded && stack == null && !worldObj.isRemote)
-      takeEncodedPattern()
-    else
-      super.setInventorySlotContents(slot, stack)
-  }
-
-  override def decrStackSize(slot: Int, n: Int) = {
-    if (slot == slots.encoded && !worldObj.isRemote)
-      takeEncodedPattern()
-    else
-      super.decrStackSize(slot, n)
-  }
 
   override def getMachineRepresentation = new ItemStack(BlockEncoder)
 
