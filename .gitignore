@@ -1,0 +1,12 @@
+/bin
+/out
+/build
+/run
+/deps/run
+/.idea/workspace.xml
+/.idea/dictionaries
+/eclipse
+/.gradle
+/*.iml
+/*.ipr
+/.idea/libraries/Gradle__*
