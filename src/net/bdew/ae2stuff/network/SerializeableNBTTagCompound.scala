@@ -4,20 +4,20 @@ import java.io.{ObjectInputStream, ObjectOutputStream}
 
 import net.minecraft.nbt.{CompressedStreamTools, NBTSizeTracker, NBTTagCompound}
 
-class SerializableNBT extends Serializable {
-  var tag = new NBTTagCompound
+class SerializableNBT(var tag: NBTTagCompound = new NBTTagCompound) extends Serializable {
 
   private def writeObject(out: ObjectOutputStream) {
-    out.write(CompressedStreamTools.compress(tag))
-    CompressedStreamTools.write(tag, out)
+    out.writeObject(CompressedStreamTools.compress(tag))
   }
 
   private def readObject(in: ObjectInputStream) {
-    tag = CompressedStreamTools.func_152457_a(in.readObject().asInstanceOf[Array[Byte]], new NBTSizeTracker(1024 * 1024))
+    val obj = in.readObject()
+    tag = CompressedStreamTools.func_152457_a(obj.asInstanceOf[Array[Byte]], new NBTSizeTracker(1024 * 1024))
   }
 }
 
 object SerializableNBT {
   implicit def ser2content(v: SerializableNBT) = v.tag
+  implicit def content2ser(v: NBTTagCompound) = new SerializableNBT(v)
 }
 
