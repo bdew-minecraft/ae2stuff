@@ -32,9 +32,12 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   })
 
   def getNode = {
-    if (node == null)
-      node = AEApi.instance().createGridNode(this)
-    node
+    if (getWorldObj == null || getWorldObj.isRemote) null
+    else {
+      if (node == null)
+        node = AEApi.instance().createGridNode(this)
+      node
+    }
   }
 
   // IGridHost
@@ -44,7 +47,7 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   override def securityBreak() = getWorldObj.setBlockToAir(xCoord, yCoord, zCoord)
 
   // IGridBlock
-  override def getIdlePowerUsage = 1
+  override def getIdlePowerUsage = 0
   override def getFlags = util.EnumSet.noneOf(classOf[GridFlags])
   override def getGridColor = AEColor.Transparent
   override def getConnectableSides = util.EnumSet.allOf(classOf[ForgeDirection])
@@ -52,8 +55,11 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   override def isWorldAccessable = true
   override def getLocation = new DimensionalCoord(this)
 
-  override def onGridNotification(p1: GridNotification)
+  // Needs to be implemented by subclass
   override def getMachineRepresentation: ItemStack
-  override def setNetworkStatus(p1: IGrid, p2: Int)
-  override def gridChanged()
+
+  // Default notifications do nothing
+  override def onGridNotification(p1: GridNotification) {}
+  override def setNetworkStatus(p1: IGrid, p2: Int) {}
+  override def gridChanged() {}
 }

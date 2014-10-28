@@ -1,7 +1,6 @@
 package net.bdew.ae2stuff.machines.encoder
 
 import appeng.api.AEApi
-import appeng.api.networking.{GridNotification, IGrid}
 import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.Misc
 import net.bdew.lib.tile.TileExtended
@@ -66,8 +65,5 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     slot == slots.patterns && blankPattern.sameAsStack(stack)
 
   override def getMachineRepresentation = new ItemStack(BlockEncoder)
-
-  override def onGridNotification(p1: GridNotification) = println("Grid notification: " + p1)
-  override def setNetworkStatus(p1: IGrid, p2: Int) = println("Set net status: " + p1 + ", " + p2)
-  override def gridChanged() = println("Grid changed")
+  override def getIdlePowerUsage = MachineEncoder.idlePowerDraw
 }

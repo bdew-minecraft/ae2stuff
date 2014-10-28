@@ -11,6 +11,8 @@ object MachineEncoder extends Machine("Encoder", BlockEncoder) with GuiProvider 
   override def guiId = 1
   override type TEClass = TileEncoder
 
+  lazy val idlePowerDraw = tuning.getDouble("IdlePower")
+
   @SideOnly(Side.CLIENT)
   override def getGui(te: TEClass, player: EntityPlayer) = new GuiEncoder(new ContainerEncoder(te, player))
   override def getContainer(te: TEClass, player: EntityPlayer) = new ContainerEncoder(te, player)

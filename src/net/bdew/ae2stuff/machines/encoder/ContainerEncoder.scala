@@ -16,6 +16,8 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
   addSlotToContainer(new SlotValidating(te, te.slots.patterns, 143, 17))
   addSlotToContainer(new SlotFakeEncodedPattern(te, te.slots.encoded, 143, 53))
 
+  bindPlayerInventory(player.inventory, 8, 84, 142)
+
   def updateRecipe() {
     val c = new InventoryCrafting(this, 3, 3)
     for (i <- 0 until 9)
@@ -34,9 +36,6 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
     detectAndSendChanges()
     r
   }
-
-
-  bindPlayerInventory(player.inventory, 8, 84, 142)
 
   override def detectAndSendChanges() {
     super.detectAndSendChanges()
