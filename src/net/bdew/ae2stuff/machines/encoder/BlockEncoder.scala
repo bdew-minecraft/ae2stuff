@@ -3,6 +3,7 @@ package net.bdew.ae2stuff.machines.encoder
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.block.{HasTE, SimpleBlock}
+import net.bdew.lib.tile.inventory.BreakableInventoryBlock
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
@@ -10,8 +11,10 @@ import net.minecraft.util.{ChatComponentTranslation, ChatStyle, EnumChatFormatti
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
-object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[TileEncoder] {
+object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[TileEncoder] with BreakableInventoryBlock {
   override val TEClass = classOf[TileEncoder]
+
+  setHardness(1)
 
   var topIcon: IIcon = null
 

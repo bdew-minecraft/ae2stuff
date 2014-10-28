@@ -3,6 +3,7 @@ package net.bdew.ae2stuff.machines.encoder
 import appeng.api.AEApi
 import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.Misc
+import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
 import net.minecraft.item.ItemStack
@@ -55,6 +56,14 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     newStack.setTagCompound(tag)
     newStack
   }
+
+  override def dropItems() {
+    if (getWorldObj != null && !getWorldObj.isRemote && getStackInSlot(slots.patterns) != null) {
+      ItemUtils.throwItemAt(getWorldObj, xCoord, yCoord, zCoord, getStackInSlot(slots.patterns))
+    }
+    inv = new Array[ItemStack](inv.size)
+  }
+
 
   // Inventory stuff
 
