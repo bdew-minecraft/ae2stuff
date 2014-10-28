@@ -16,6 +16,7 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   serverTick.listen(() => {
     if (!initialized)
       getNode.updateState()
+    initialized = true
   })
 
   persistSave.listen((tag) => {
@@ -30,6 +31,15 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
     node.loadFromNBT("ae_node", tag)
     initialized = false
   })
+
+  override def invalidate() {
+    if (node != null) {
+      node.destroy()
+      node = null
+      initialized = false
+    }
+    super.invalidate()
+  }
 
   def getNode = {
     if (getWorldObj == null || getWorldObj.isRemote) null
