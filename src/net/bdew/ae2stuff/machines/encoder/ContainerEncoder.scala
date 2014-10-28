@@ -38,5 +38,14 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
 
   bindPlayerInventory(player.inventory, 8, 84, 142)
 
+  override def detectAndSendChanges() {
+    super.detectAndSendChanges()
+    if (!te.getWorldObj.isRemote) {
+      if (!te.getNode.isActive) {
+        player.closeScreen()
+      }
+    }
+  }
+
   override def canInteractWith(player: EntityPlayer) = te.isUseableByPlayer(player)
 }
