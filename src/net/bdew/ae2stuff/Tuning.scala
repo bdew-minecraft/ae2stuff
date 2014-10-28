@@ -11,18 +11,45 @@ package net.bdew.ae2stuff
 
 import java.io.{File, FileWriter}
 
+import appeng.api.AEApi
+import appeng.api.util.{AEColor, AEColoredItemDefinition, AEItemDefinition}
 import net.bdew.lib.recipes.gencfg.{ConfigSection, GenericConfigLoader, GenericConfigParser}
-import net.bdew.lib.recipes.{RecipeLoader, RecipeParser, RecipesHelper}
+import net.bdew.lib.recipes.{RecipeLoader, RecipeParser, RecipesHelper, StackRef}
 
 object Tuning extends ConfigSection
 
 object TuningLoader {
 
-  class Parser extends RecipeParser with GenericConfigParser
+  case class StackMaterial(name: String) extends StackRef
+
+  case class StackPart(name: String) extends StackRef
+
+  case class StackPartColored(name: String, color: String) extends StackRef
+
+  class Parser extends RecipeParser with GenericConfigParser {
+    def specMaterial = "M" ~> ":" ~> ident ^^ StackMaterial
+    def specPart = "P" ~> ":" ~> ident ^^ StackPart
+    def specPartColored = "C" ~> ":" ~> ident ~ "/" ~ ident ^^ { case name ~ sl ~ color => StackPartColored(name, color)}
+    override def spec = specMaterial | specPart | specPartColored | super.spec
+  }
 
   val loader = new RecipeLoader with GenericConfigLoader {
     val cfgStore = Tuning
     override def newParser() = new Parser
+
+    val materials = AEApi.instance().materials()
+    val parts = AEApi.instance().parts()
+
+    override def getConcreteStack(s: StackRef, cnt: Int) = s match {
+      case StackMaterial(name) =>
+        materials.getClass.getField("material" + name).get(materials).asInstanceOf[AEItemDefinition].stack(cnt)
+      case StackPart(name) =>
+        parts.getClass.getField("part" + name).get(parts).asInstanceOf[AEItemDefinition].stack(cnt)
+      case StackPartColored(name, colorName) =>
+        val color = AEColor.valueOf(colorName)
+        parts.getClass.getField("part" + name).get(parts).asInstanceOf[AEColoredItemDefinition].stack(color, cnt)
+      case _ => super.getConcreteStack(s, cnt)
+    }
   }
 
   def loadDelayed() = loader.processRecipeStatements()
