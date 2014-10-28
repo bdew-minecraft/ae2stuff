@@ -1,3 +1,5 @@
 package net.bdew.ae2stuff.network
 
-case class MsgSetRecipe(nbt: SerializableNBT) extends NetHandler.Message
+import net.bdew.lib.network.ItemStackSerialize
+
+case class MsgSetRecipe(recipe: Map[Int, ItemStackSerialize]) extends NetHandler.Message
