@@ -22,7 +22,7 @@ buildscript {
 apply plugin: 'scala'
 apply plugin: 'forge'
 
-version = "0.1.0"
+version = "0.1.1"
 ext.bdlibver = "1.5.1.32"
 ext.versuffix = "mc1710"
 ext.apiVer = version
@@ -64,12 +64,14 @@ repositories {
 
 dependencies {
     compile "net.bdew:bdlib:" + bdlibver
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.3.56:dev"
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.104:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.3.26:dev"
-    compile "mcp.mobius.waila:Waila:1.5.5_1.7.10"
+    compile "codechicken:NotEnoughItems:1.7.10-1.0.3.74:dev"
+    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.110:dev"
+    compile "codechicken:CodeChickenCore:1.7.10-1.0.4.29:dev"
+    compile "mcp.mobius.waila:Waila:1.5.6a_1.7.10"
     compile "net.bdew.thirdparty:CoFHLib:R1.0.1:api"
-    compile "appeng:appliedenergistics2:rv1-stable-1:dev"
+    compile module("appeng:appliedenergistics2:rv2-beta-7:dev") {
+        transitive = false
+    }
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -82,6 +84,7 @@ sourceSets {
         resources {
             srcDir 'resources'
         }
+        output.resourcesDir = output.classesDir // Hack for IDEA
     }
 }
 

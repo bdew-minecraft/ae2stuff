@@ -71,7 +71,7 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   override def getGridColor = AEColor.Transparent
   override def getConnectableSides = util.EnumSet.allOf(classOf[ForgeDirection])
   override def getMachine = this
-  override def isWorldAccessable = true
+  override def isWorldAccessible = true
   override def getLocation = new DimensionalCoord(this)
 
   // Needs to be implemented by subclass
