@@ -23,7 +23,7 @@ apply plugin: 'scala'
 apply plugin: 'forge'
 
 version = "0.1.2"
-ext.bdlibver = "1.6.0.35"
+ext.bdlibver = "1.6.0.36"
 ext.versuffix = "mc1710"
 ext.apiVer = version
 
@@ -104,7 +104,7 @@ task sourceJar(type: Jar) {
 }
 
 task deobfJar(type: Jar) {
-    from sourceSets.main.output
+    from sourceSets.main.output.classesDir
     exclude "**/*.psd"
 }
 
