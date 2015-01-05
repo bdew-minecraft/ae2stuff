@@ -15,7 +15,9 @@ import net.bdew.lib.block.{HasTE, SimpleBlock}
 import net.bdew.lib.tile.inventory.BreakableInventoryBlock
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.util.{ChatComponentTranslation, ChatStyle, EnumChatFormatting, IIcon}
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
@@ -50,5 +52,10 @@ object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[Til
         )
     }
     true
+  }
+
+  override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, player: EntityLivingBase, stack: ItemStack) {
+    if (player.isInstanceOf[EntityPlayer])
+      getTE(world, x, y, z).placingPlayer = player.asInstanceOf[EntityPlayer]
   }
 }

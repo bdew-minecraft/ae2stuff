@@ -11,7 +11,6 @@ package net.bdew.ae2stuff
 
 import java.io.File
 
-import appeng.recipes.handlers.Inscribe
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event._

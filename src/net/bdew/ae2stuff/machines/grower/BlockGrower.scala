@@ -13,7 +13,9 @@ import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.block.{HasTE, SimpleBlock}
 import net.bdew.lib.tile.inventory.BreakableInventoryBlock
 import net.minecraft.block.material.Material
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
 object BlockGrower extends SimpleBlock("Grower", Material.iron) with HasTE[TileGrower] with BreakableInventoryBlock {
@@ -25,5 +27,10 @@ object BlockGrower extends SimpleBlock("Grower", Material.iron) with HasTE[TileG
     if (!world.isRemote)
       player.openGui(AE2Stuff, MachineGrower.guiId, world, x, y, z)
     true
+  }
+
+  override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, player: EntityLivingBase, stack: ItemStack) {
+    if (player.isInstanceOf[EntityPlayer])
+      getTE(world, x, y, z).placingPlayer = player.asInstanceOf[EntityPlayer]
   }
 }

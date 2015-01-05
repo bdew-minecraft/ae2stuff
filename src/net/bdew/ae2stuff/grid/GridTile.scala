@@ -14,7 +14,11 @@ import java.util
 import appeng.api.AEApi
 import appeng.api.networking._
 import appeng.api.util.{AECableType, AEColor, DimensionalCoord}
+import appeng.core.WorldSettings
+import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.TileExtended
+import net.bdew.lib.tile.inventory.BreakableInventoryTile
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 
@@ -22,9 +26,14 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   var node: IGridNode = null
   var initialized = false
 
+  var placingPlayer: EntityPlayer = null
+
   serverTick.listen(() => {
-    if (!initialized)
+    if (!initialized) {
+      if (placingPlayer != null)
+        getNode.setPlayerID(WorldSettings.getInstance().getPlayerID(placingPlayer.getGameProfile))
       getNode.updateState()
+    }
     initialized = true
   })
 
@@ -60,10 +69,14 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   }
 
   // IGridHost
-
   override def getGridNode(p1: ForgeDirection) = getNode
   override def getCableConnectionType(p1: ForgeDirection) = AECableType.COVERED
-  override def securityBreak() = getWorldObj.setBlockToAir(xCoord, yCoord, zCoord)
+  override def securityBreak() = {
+    ItemUtils.throwItemAt(getWorldObj, xCoord, yCoord, zCoord, new ItemStack(getBlockType))
+    if (this.isInstanceOf[BreakableInventoryTile])
+      this.asInstanceOf[BreakableInventoryTile].dropItems()
+    getWorldObj.setBlockToAir(xCoord, yCoord, zCoord)
+  }
 
   // IGridBlock
   override def getIdlePowerUsage = 0

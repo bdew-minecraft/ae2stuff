@@ -11,7 +11,6 @@ package net.bdew.ae2stuff.machines.grower
 
 import appeng.api.AEApi
 import appeng.api.implementations.items.IGrowableCrystal
-import appeng.api.networking.{GridNotification, IGrid}
 import cpw.mods.fml.common.registry.GameRegistry
 import net.bdew.ae2stuff.grid.{GridTile, VariableIdlePower}
 import net.bdew.lib.items.ItemUtils
@@ -67,8 +66,4 @@ class TileGrower extends TileExtended with GridTile with SidedInventory with Per
         || chargedCertusQuartz.sameAsStack(stack)
       )
   override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = !isItemValidForSlot(slot, stack)
-
-  override def onGridNotification(p1: GridNotification) {}
-  override def setNetworkStatus(p1: IGrid, p2: Int) {}
-  override def gridChanged() {}
 }
