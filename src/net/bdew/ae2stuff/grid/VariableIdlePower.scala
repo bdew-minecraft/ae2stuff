@@ -17,8 +17,10 @@ trait VariableIdlePower extends GridTile {
   override def getIdlePowerUsage = currentPowerUsage
 
   def setIdlePowerUse(v: Double) {
-    currentPowerUsage = v
-    if (node != null && node.getGrid != null)
-      node.getGrid.postEvent(new MENetworkPowerIdleChange(node))
+    if (v != currentPowerUsage) {
+      currentPowerUsage = v
+      if (node != null && node.getGrid != null)
+        node.getGrid.postEvent(new MENetworkPowerIdleChange(node))
+    }
   }
 }
