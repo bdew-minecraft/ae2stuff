@@ -22,6 +22,8 @@ class TileGrower extends TileExtended with GridTile with SidedInventory with Per
   override def getSizeInventory = 3 * 9
   override def getMachineRepresentation = new ItemStack(BlockGrower)
 
+  var sleepMode = false
+
   val redstoneDust = GameRegistry.findItem("minecraft", "redstone")
   val netherQuartz = GameRegistry.findItem("minecraft", "quartz")
   val crystal = AEApi.instance().items().itemCrystalSeed.item().asInstanceOf[IGrowableCrystal]
@@ -31,7 +33,7 @@ class TileGrower extends TileExtended with GridTile with SidedInventory with Per
   setIdlePowerUse(MachineGrower.idlePowerDraw)
 
   serverTick.listen(() => {
-    if (getNode.isActive && (getWorldObj.getTotalWorldTime % MachineGrower.cycleTicks == 0)) {
+    if (!sleepMode && getNode.isActive && (getWorldObj.getTotalWorldTime % MachineGrower.cycleTicks == 0)) {
       var hadWork = false
       val invZipped = inv.zipWithIndex.filter(_._1 != null)
       for ((stack, slot) <- invZipped if stack.getItem.isInstanceOf[IGrowableCrystal]) {
@@ -49,13 +51,21 @@ class TileGrower extends TileExtended with GridTile with SidedInventory with Per
         decrStackSize(netherPos, 1)
         decrStackSize(redstonePos, 1)
         ItemUtils.addStackToSlots(fluixCrystal.stack(2), this, 0 until getSizeInventory, false)
+        hadWork = true
       }
-      if (hadWork)
+      if (hadWork) {
         setIdlePowerUse(MachineGrower.activePowerDraw)
-      else
+      } else {
         setIdlePowerUse(MachineGrower.idlePowerDraw)
+        sleepMode = true
+      }
     }
   })
+
+  override def markDirty(): Unit = {
+    sleepMode = false
+    super.markDirty()
+  }
 
   allowSided = true
   override def isItemValidForSlot(slot: Int, stack: ItemStack) =
