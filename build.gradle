@@ -23,7 +23,7 @@ apply plugin: 'scala'
 apply plugin: 'forge'
 
 version = "0.1.2"
-ext.bdlibver = "1.6.0.36"
+ext.bdlibver = "1.6.2.41"
 ext.versuffix = "mc1710"
 ext.apiVer = version
 
@@ -69,7 +69,7 @@ dependencies {
     compile "codechicken:CodeChickenCore:1.7.10-1.0.4.29:dev"
     compile "mcp.mobius.waila:Waila:1.5.6a_1.7.10"
     compile "net.bdew.thirdparty:CoFHLib:R1.0.1:api"
-    compile module("appeng:appliedenergistics2:rv2-beta-7:dev") {
+    compile module("appeng:appliedenergistics2:rv2-beta-8:dev") {
         transitive = false
     }
 }
