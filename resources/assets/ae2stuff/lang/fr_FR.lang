@@ -1,0 +1,4 @@
+tile.ae2stuff.Encoder.name=Encodeur de modèle
+tile.ae2stuff.Grower.name=Chambre de croissance du crystal
+
+ae2stuff.error.not_connected=Réseau non connecté
