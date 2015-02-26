@@ -2,3 +2,5 @@ tile.ae2stuff.Encoder.name=Pattern Encoder
 tile.ae2stuff.Grower.name=Crystal Growth Chamber
 
 ae2stuff.error.not_connected=Network not connected
+
+itemGroup.bdew.ae2stuff=AE2 Stuff
