@@ -15,6 +15,7 @@ import appeng.api.AEApi
 import appeng.api.networking._
 import appeng.api.util.{AECableType, AEColor, DimensionalCoord}
 import appeng.core.WorldSettings
+import cpw.mods.fml.common.FMLCommonHandler
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.BreakableInventoryTile
@@ -45,8 +46,10 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   persistLoad.listen((tag) => {
     if (node != null)
       node.destroy()
-    node = AEApi.instance().createGridNode(this)
-    node.loadFromNBT("ae_node", tag)
+    if (FMLCommonHandler.instance().getEffectiveSide.isServer) {
+      node = AEApi.instance().createGridNode(this)
+      node.loadFromNBT("ae_node", tag)
+    }
     initialized = false
   })
 
