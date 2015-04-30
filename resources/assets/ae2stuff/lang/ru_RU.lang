@@ -1,0 +1,6 @@
+tile.ae2stuff.Encoder.name=Кодировщик шаблонов
+tile.ae2stuff.Grower.name=Камера для выращивания кристаллов
+
+ae2stuff.error.not_connected=Нет соединения с сетью
+
+itemGroup.bdew.ae2stuff=AE2 Stuff
