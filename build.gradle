@@ -66,7 +66,7 @@ repositories {
 }
 
 dependencies {
-    compile "net.bdew:bdlib:${config.bdlib.version}-mc${config.minecraft.version}:dev"
+    compile "net.bdew:bdlib:${config.bdlib.version}"
 
     compile "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"
     compile "codechicken:CodeChickenLib:${config.minecraft.version}-${config.ccl.version}:dev"
