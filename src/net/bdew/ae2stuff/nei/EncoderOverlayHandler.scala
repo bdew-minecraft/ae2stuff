@@ -23,10 +23,10 @@ object EncoderOverlayHandler extends IOverlayHandler {
       pStack <- items
       if pStack != null && pStack.items.nonEmpty && pStack.items(0) != null && pStack.items(0).getItem != null
     } yield {
-      val x = (pStack.relx - 25) / 18
-      val y = (pStack.rely - 6) / 18
-      (y * 3 + x) -> new ItemStackSerialize(pStack.items(0))
-    }
+        val x = (pStack.relx - 25) / 18
+        val y = (pStack.rely - 6) / 18
+        (y * 3 + x) -> new ItemStackSerialize(pStack.items(0))
+      }
     NetHandler.sendToServer(new MsgSetRecipe(stacks.toMap))
   }
 }

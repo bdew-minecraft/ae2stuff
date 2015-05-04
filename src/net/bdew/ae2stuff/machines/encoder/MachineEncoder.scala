@@ -28,7 +28,7 @@ object MachineEncoder extends Machine("Encoder", BlockEncoder) with GuiProvider 
 
   NetHandler.regServerHandler {
     case (MsgSetRecipe(recipe), player) =>
-      Misc.asInstanceOpt(player.openContainer, classOf[ContainerEncoder]).map { cont =>
+      Misc.asInstanceOpt(player.openContainer, classOf[ContainerEncoder]).foreach { cont =>
         for ((slotNum, recIdx) <- cont.te.slots.recipe.zipWithIndex) {
           cont.te.setInventorySlotContents(slotNum, recipe.get(recIdx).map(_.stack).orNull)
         }

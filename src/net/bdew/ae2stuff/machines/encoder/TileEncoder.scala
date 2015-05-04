@@ -9,7 +9,7 @@
 
 package net.bdew.ae2stuff.machines.encoder
 
-import appeng.api.AEApi
+import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.Misc
 import net.bdew.lib.items.ItemUtils
@@ -28,10 +28,11 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     val encoded = 11
   }
 
-  lazy val blankPattern = AEApi.instance().materials().materialBlankPattern
-  lazy val encodedPattern = AEApi.instance().items().itemEncodedPattern.item()
+  lazy val blankPattern = AE2Defs.materials.blankPattern()
+  lazy val encodedPattern = AE2Defs.items.encodedPattern().maybeItem().get()
 
   def getRecipe = slots.recipe map getStackInSlot
+
   def getResult = getStackInSlot(slots.result)
 
   override def markDirty() {
@@ -70,9 +71,8 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     if (getWorldObj != null && !getWorldObj.isRemote && getStackInSlot(slots.patterns) != null) {
       ItemUtils.throwItemAt(getWorldObj, xCoord, yCoord, zCoord, getStackInSlot(slots.patterns))
     }
-    inv = new Array[ItemStack](inv.size)
+    inv = new Array[ItemStack](inv.length)
   }
-
 
   // Inventory stuff
 
@@ -80,7 +80,7 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
   override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = false
   override def getAccessibleSlotsFromSide(side: Int) = Array(slots.patterns)
   override def isItemValidForSlot(slot: Int, stack: ItemStack) =
-    slot == slots.patterns && blankPattern.sameAsStack(stack)
+    slot == slots.patterns && blankPattern.isSameAs(stack)
 
   override def getMachineRepresentation = new ItemStack(BlockEncoder)
   override def getIdlePowerUsage = MachineEncoder.idlePowerDraw

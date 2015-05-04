@@ -11,10 +11,12 @@ package net.bdew.ae2stuff
 
 import java.io.{File, FileWriter}
 
-import appeng.api.AEApi
-import appeng.api.util.{AEColor, AEColoredItemDefinition, AEItemDefinition}
+import appeng.api.definitions.IItemDefinition
+import appeng.api.util.{AEColor, AEColoredItemDefinition}
+import com.google.common.base.Optional
 import net.bdew.lib.recipes.gencfg.{ConfigSection, GenericConfigLoader, GenericConfigParser}
 import net.bdew.lib.recipes.{RecipeLoader, RecipeParser, RecipesHelper, StackRef}
+import net.minecraft.item.ItemStack
 
 object Tuning extends ConfigSection
 
@@ -29,7 +31,7 @@ object TuningLoader {
   class Parser extends RecipeParser with GenericConfigParser {
     def specMaterial = "M" ~> ":" ~> ident ^^ StackMaterial
     def specPart = "P" ~> ":" ~> ident ^^ StackPart
-    def specPartColored = "C" ~> ":" ~> ident ~ "/" ~ ident ^^ { case name ~ sl ~ color => StackPartColored(name, color)}
+    def specPartColored = "C" ~> ":" ~> ident ~ "/" ~ ident ^^ { case name ~ sl ~ color => StackPartColored(name, color) }
     override def spec = specMaterial | specPart | specPartColored | super.spec
   }
 
@@ -37,17 +39,24 @@ object TuningLoader {
     val cfgStore = Tuning
     override def newParser() = new Parser
 
-    val materials = AEApi.instance().materials()
-    val parts = AEApi.instance().parts()
+    val materials = AE2Defs.materials
+    val parts = AE2Defs.parts
+
+    def getOptionalStack(s: Optional[ItemStack], name: String): ItemStack = {
+      if (s.isPresent)
+        s.get()
+      else
+        error("Unable to resolve %s", name)
+    }
 
     override def getConcreteStack(s: StackRef, cnt: Int) = s match {
       case StackMaterial(name) =>
-        materials.getClass.getField("material" + name).get(materials).asInstanceOf[AEItemDefinition].stack(cnt)
+        getOptionalStack(AE2Defs.material(name).asInstanceOf[IItemDefinition].maybeStack(cnt), s.toString)
       case StackPart(name) =>
-        parts.getClass.getField("part" + name).get(parts).asInstanceOf[AEItemDefinition].stack(cnt)
+        getOptionalStack(AE2Defs.part(name).asInstanceOf[IItemDefinition].maybeStack(cnt), s.toString)
       case StackPartColored(name, colorName) =>
         val color = AEColor.valueOf(colorName)
-        parts.getClass.getField("part" + name).get(parts).asInstanceOf[AEColoredItemDefinition].stack(color, cnt)
+        AE2Defs.part(name).asInstanceOf[AEColoredItemDefinition].stack(color, cnt)
       case _ => super.getConcreteStack(s, cnt)
     }
   }
