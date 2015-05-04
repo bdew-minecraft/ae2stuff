@@ -22,24 +22,31 @@ buildscript {
 apply plugin: 'scala'
 apply plugin: 'forge'
 
-version = "0.1.7"
-ext.bdlibver = "1.7.0.70"
-ext.versuffix = "mc1710"
-ext.apiVer = version
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+if (project.hasProperty('forgeOverride')) {
+    config.forge.version = forgeOverride
+}
 
 if (project.hasProperty('buildnum')) {
-    project.version = project.version + '.' + project.buildnum
+    ext.simpleVersion = "${config.ae2stuff.version}.${project.buildnum}"
 } else {
-    project.version = project.version + '-DEV'
+    ext.simpleVersion = "${config.ae2stuff.version}-DEV"
 }
+
+version = simpleVersion + '-mc' + config.minecraft.version
 
 group = "net.bdew"
 archivesBaseName = "ae2stuff"
 
 minecraft {
-    version = "1.7.10-10.13.2.1291"
-    replace("BDLIB_VER", project.bdlibver)
-    replace("AE2STUFF_VER", project.version)
+    version = "${config.minecraft.version}-${config.forge.version}"
+    replace("BDLIB_VER", config.bdlib.version)
+    replace("AE2STUFF_VER", simpleVersion.toString())
 }
 
 repositories {
@@ -53,24 +60,24 @@ repositories {
         url = "http://chickenbones.net/maven"
     }
     maven {
-        name = "ic2"
-        url = "http://maven.ic2.player.to/"
-    }
-    maven {
         name "waila"
         url "http://mobiusstrip.eu/maven"
     }
 }
 
 dependencies {
-    compile "net.bdew:bdlib:" + bdlibver
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.3.74:dev"
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.110:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.4.29:dev"
-    compile "mcp.mobius.waila:Waila:1.5.6a_1.7.10"
-    compile "net.bdew.thirdparty:CoFHLib:R1.0.1:api"
-    compile module("appeng:appliedenergistics2:rv2-beta-8:dev") {
-        transitive = false
+    compile "net.bdew:bdlib:${config.bdlib.version}-mc${config.minecraft.version}:dev"
+
+    compile "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"
+    compile "codechicken:CodeChickenLib:${config.minecraft.version}-${config.ccl.version}:dev"
+    compile "codechicken:CodeChickenCore:${config.minecraft.version}-${config.ccc.version}:dev"
+
+    compile module("mcp.mobius.waila:Waila:${config.waila.version}_${config.minecraft.version}") {
+        transitive = false // WAILA is depending on an invalid combination of CCC/NEI that doesn't run...
+    }
+
+    compile module("appeng:appliedenergistics2:${config.ae2.version}:dev") {
+        transitive = false // AE2 Depends on a lot of crap, some of it not readily available anywhere that i know
     }
 }
 
@@ -101,17 +108,19 @@ processResources {
 }
 
 task sourceJar(type: Jar) {
+    classifier "sources"
 }
 
 task deobfJar(type: Jar) {
-    from sourceSets.main.output.classesDir
+    from sourceSets.main.output
     exclude "**/*.psd"
+    classifier "dev"
+    duplicatesStrategy "exclude"
 }
 
 
 jar {
     exclude "**/*.psd"
-    appendix = project.versuffix
 }
 
 afterEvaluate { project ->
@@ -130,11 +139,8 @@ publishing {
     publications {
         maven(MavenPublication) {
             artifact deobfJar
-
-            artifact sourceJar {
-                classifier "sources"
-            }
-       }
+            artifact sourceJar
+        }
     }
     repositories {
         maven {
