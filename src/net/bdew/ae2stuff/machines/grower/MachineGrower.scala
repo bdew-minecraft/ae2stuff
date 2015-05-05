@@ -11,16 +11,17 @@ package net.bdew.ae2stuff.machines.grower
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.lib.gui.GuiProvider
-import net.bdew.lib.machine.Machine
+import net.bdew.lib.machine.{Machine, PoweredMachine}
 import net.minecraft.entity.player.EntityPlayer
 
-object MachineGrower extends Machine("Grower", BlockGrower) with GuiProvider {
+object MachineGrower extends Machine("Grower", BlockGrower) with GuiProvider with PoweredMachine {
   override def guiId = 2
   override type TEClass = TileGrower
 
   lazy val idlePowerDraw = tuning.getDouble("IdlePower")
-  lazy val activePowerDraw = tuning.getDouble("ActivePower")
+  lazy val cyclePower = tuning.getDouble("CyclePower")
   lazy val cycleTicks = tuning.getInt("CycleTicks")
+  lazy val powerCapacity = tuning.getDouble("PowerCapacity")
 
   @SideOnly(Side.CLIENT)
   override def getGui(te: TEClass, player: EntityPlayer) = new GuiGrower(new ContainerGrower(te, player))
