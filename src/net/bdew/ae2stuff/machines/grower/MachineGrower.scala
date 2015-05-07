@@ -9,10 +9,13 @@
 
 package net.bdew.ae2stuff.machines.grower
 
+import appeng.api.config.Upgrades
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.gui.GuiProvider
 import net.bdew.lib.machine.{Machine, PoweredMachine}
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 
 object MachineGrower extends Machine("Grower", BlockGrower) with GuiProvider with PoweredMachine {
   override def guiId = 2
@@ -22,6 +25,11 @@ object MachineGrower extends Machine("Grower", BlockGrower) with GuiProvider wit
   lazy val cyclePower = tuning.getDouble("CyclePower")
   lazy val cycleTicks = tuning.getInt("CycleTicks")
   lazy val powerCapacity = tuning.getDouble("PowerCapacity")
+
+  AE2Stuff.onPostInit.listen { ev =>
+    // Can't do this too early, causes error
+    Upgrades.SPEED.registerItem(new ItemStack(BlockGrower), 3)
+  }
 
   @SideOnly(Side.CLIENT)
   override def getGui(te: TEClass, player: EntityPlayer) = new GuiGrower(new ContainerGrower(te, player))

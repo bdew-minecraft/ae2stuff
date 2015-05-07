@@ -9,20 +9,24 @@
 
 package net.bdew.ae2stuff.machines.grower
 
+import appeng.api.config.Upgrades
 import appeng.api.implementations.items.IGrowableCrystal
 import appeng.api.networking.GridNotification
 import cpw.mods.fml.common.registry.GameRegistry
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.{GridTile, PoweredTile}
+import net.bdew.ae2stuff.misc.UpgradeInventory
+import net.bdew.lib.data.base.TileDataSlots
 import net.bdew.lib.items.ItemUtils
-import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
 import net.minecraft.item.ItemStack
 
-class TileGrower extends TileExtended with GridTile with SidedInventory with PersistentInventoryTile with BreakableInventoryTile with PoweredTile {
+class TileGrower extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with BreakableInventoryTile with PoweredTile {
   override def getSizeInventory = 3 * 9
   override def getMachineRepresentation = new ItemStack(BlockGrower)
   override def powerCapacity = MachineGrower.powerCapacity
+
+  val upgrades = new UpgradeInventory("upgrades", this, 3, Set(Upgrades.SPEED))
 
   val redstoneDust = GameRegistry.findItem("minecraft", "redstone")
   val netherQuartz = GameRegistry.findItem("minecraft", "quartz")
@@ -33,10 +37,13 @@ class TileGrower extends TileExtended with GridTile with SidedInventory with Per
   serverTick.listen(() => {
     if (getWorldObj.getTotalWorldTime % MachineGrower.cycleTicks == 0 && isAwake) {
       var hadWork = false
-      if (getNode.isActive && powerStored >= MachineGrower.cyclePower) {
+      val needPower = MachineGrower.cyclePower * (1 + upgrades.cards(Upgrades.SPEED))
+      if (getNode.isActive && powerStored >= needPower) {
         val invZipped = inv.zipWithIndex.filter(_._1 != null)
         for ((stack, slot) <- invZipped if stack.getItem.isInstanceOf[IGrowableCrystal]) {
-          val ns = stack.getItem.asInstanceOf[IGrowableCrystal].triggerGrowth(stack)
+          var ns = stack
+          for (i <- 0 to upgrades.cards(Upgrades.SPEED) if stack.getItem.isInstanceOf[IGrowableCrystal])
+            ns = stack.getItem.asInstanceOf[IGrowableCrystal].triggerGrowth(stack)
           setInventorySlotContents(slot, ns)
           hadWork = true
         }
@@ -54,7 +61,7 @@ class TileGrower extends TileExtended with GridTile with SidedInventory with Per
         }
       }
       if (hadWork) {
-        powerStored -= MachineGrower.cyclePower
+        powerStored -= needPower
       } else {
         sleep()
       }
@@ -83,4 +90,9 @@ class TileGrower extends TileExtended with GridTile with SidedInventory with Per
       )
 
   override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = !isItemValidForSlot(slot, stack)
+
+  override def dropItems(): Unit = {
+    super.dropItems()
+    upgrades.dropInventory()
+  }
 }
