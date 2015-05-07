@@ -140,4 +140,8 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
   }
 
   override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = slot == slots.output
+  override def dropItems(): Unit = {
+    super.dropItems()
+    upgrades.dropInventory()
+  }
 }
