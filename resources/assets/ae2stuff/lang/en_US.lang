@@ -1,5 +1,6 @@
 tile.ae2stuff.Encoder.name=Pattern Encoder
 tile.ae2stuff.Grower.name=Crystal Growth Chamber
+tile.ae2stuff.Inscriber.name=Advanced Inscriber
 
 ae2stuff.error.not_connected=Network not connected
 

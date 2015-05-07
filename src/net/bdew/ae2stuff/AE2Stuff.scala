@@ -16,6 +16,7 @@ import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event._
 import cpw.mods.fml.common.network.NetworkRegistry
 import net.bdew.ae2stuff.network.NetHandler
+import net.bdew.lib.Event
 import net.bdew.lib.gui.GuiHandler
 import org.apache.logging.log4j.Logger
 
@@ -31,6 +32,7 @@ object AE2Stuff {
 
   val guiHandler = new GuiHandler
 
+  def logDebug(msg: String, args: Any*) = log.debug(msg.format(args: _*))
   def logInfo(msg: String, args: Any*) = log.info(msg.format(args: _*))
   def logWarn(msg: String, args: Any*) = log.warn(msg.format(args: _*))
   def logError(msg: String, args: Any*) = log.error(msg.format(args: _*))
@@ -51,8 +53,11 @@ object AE2Stuff {
     NetHandler.init()
   }
 
+  val onPostInit = Event[FMLPostInitializationEvent]
+
   @EventHandler
   def postInit(event: FMLPostInitializationEvent) {
     TuningLoader.loadDelayed()
+    onPostInit.trigger(event)
   }
 }
