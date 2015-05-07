@@ -51,6 +51,7 @@ object AE2Stuff {
   def init(event: FMLInitializationEvent) {
     NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler)
     NetHandler.init()
+    FMLInterModComms.sendMessage("Waila", "register", "net.bdew.ae2stuff.waila.WailaHandler.loadCallback")
   }
 
   val onPostInit = Event[FMLPostInitializationEvent]

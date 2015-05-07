@@ -4,4 +4,8 @@ tile.ae2stuff.Inscriber.name=Advanced Inscriber
 
 ae2stuff.error.not_connected=Network not connected
 
+ae2stuff.waila.sleep.true=Sleeping
+ae2stuff.waila.sleep.false=Working
+ae2stuff.waila.power=%s / %s AE
+
 itemGroup.bdew.ae2stuff=AE2 Stuff
