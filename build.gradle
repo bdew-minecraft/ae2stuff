@@ -148,3 +148,23 @@ publishing {
         }
     }
 }
+
+
+apply plugin: 'curseforge'
+
+curse {
+    projectId = config.curseforge.id
+    apiKey = project.hasProperty("curseForgeApiKey") ? project.curseForgeApiKey : ""
+    releaseType = 'alpha'
+
+    artifact = jar
+    changelog = project.hasProperty("changelog") ? project.changelog : "No changelog available"
+
+    additionalArtifact deobfJar
+    additionalArtifact sourceJar
+
+    relatedProject 'bdlib': 'requiredLibrary'
+    relatedProject 'applied-energistics-2': 'requiredLibrary'
+    relatedProject 'notenoughitems': 'optionalLibrary'
+    relatedProject 'waila': 'optionalLibrary'
+}
