@@ -1,4 +1,11 @@
 tile.ae2stuff.Encoder.name=样板编码台
 tile.ae2stuff.Grower.name=晶体催生仓
+tile.ae2stuff.Inscriber.name=高级压印器
 
 ae2stuff.error.not_connected=未连接网络
+
+ae2stuff.waila.sleep.true=休眠中
+ae2stuff.waila.sleep.false=工作中
+ae2stuff.waila.power=%s / %s AE
+
+itemGroup.bdew.ae2stuff=AE2 Stuff
