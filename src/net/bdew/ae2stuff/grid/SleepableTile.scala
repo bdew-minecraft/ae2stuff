@@ -10,11 +10,20 @@
 package net.bdew.ae2stuff.grid
 
 import net.bdew.ae2stuff.AE2Stuff
-import net.minecraft.tileentity.TileEntity
+import net.bdew.lib.tile.TileExtended
 
-trait SleepableTile extends TileEntity {
+import scala.util.Random
+
+trait SleepableTile extends TileExtended {
   private final val TRACE = false
   private var sleeping = false
+  private val forceWakeupOn = Random.nextInt(100)
+
+  serverTick.listen(() => {
+    // This should prevent tiles from getting stuck sleeping forever
+    if (getWorldObj.getTotalWorldTime % 100 == forceWakeupOn)
+      wakeup()
+  })
 
   def isAwake = !sleeping
 
