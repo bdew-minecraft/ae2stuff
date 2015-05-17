@@ -38,7 +38,7 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
     if (getWorldObj.getTotalWorldTime % MachineGrower.cycleTicks == 0 && isAwake) {
       var hadWork = false
       val needPower = MachineGrower.cyclePower * (1 + upgrades.cards(Upgrades.SPEED))
-      if (getNode.isActive && powerStored >= needPower) {
+      if (powerStored >= needPower) {
         val invZipped = inv.zipWithIndex.filter(_._1 != null)
         for ((stack, slot) <- invZipped if stack.getItem.isInstanceOf[IGrowableCrystal]) {
           var ns = stack
@@ -65,6 +65,7 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
       } else {
         sleep()
       }
+      requestPowerIfNeeded()
     }
   })
 

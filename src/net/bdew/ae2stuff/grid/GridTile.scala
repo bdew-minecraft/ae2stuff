@@ -13,8 +13,10 @@ import java.util
 
 import appeng.api.AEApi
 import appeng.api.networking._
+import appeng.api.networking.events.MENetworkEvent
 import appeng.api.util.{AECableType, AEColor, DimensionalCoord}
 import appeng.core.WorldSettings
+import appeng.me.GridAccessException
 import cpw.mods.fml.common.FMLCommonHandler
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.TileExtended
@@ -68,6 +70,15 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
       if (node == null)
         node = AEApi.instance().createGridNode(this)
       node
+    }
+  }
+
+  def safePostEvent(ev: MENetworkEvent) = {
+    try {
+      getNode.getGrid.postEvent(ev)
+      true
+    } catch {
+      case t: GridAccessException => false
     }
   }
 

@@ -88,6 +88,7 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
             sleep()
           }
         }
+        requestPowerIfNeeded()
       }
     }
   })
