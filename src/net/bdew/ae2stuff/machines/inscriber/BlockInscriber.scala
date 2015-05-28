@@ -30,7 +30,7 @@ object BlockInscriber extends SimpleBlock("Inscriber", Material.iron) with HasTE
   var topIcon: IIcon = null
 
   override def getIcon(side: Int, meta: Int) =
-    if (side == ForgeDirection.UP.ordinal())
+    if (side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal())
       topIcon
     else
       blockIcon
