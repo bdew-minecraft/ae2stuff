@@ -16,7 +16,7 @@ import appeng.api.networking.GridNotification
 import net.bdew.ae2stuff.grid.{GridTile, PoweredTile}
 import net.bdew.ae2stuff.misc.UpgradeInventory
 import net.bdew.lib.data.base.{TileDataSlots, UpdateKind}
-import net.bdew.lib.data.{DataSlotFloat, DataSlotItemStack}
+import net.bdew.lib.data.{DataSlotBoolean, DataSlotFloat, DataSlotItemStack}
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
 import net.minecraft.block.Block
@@ -38,6 +38,15 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
   val upgrades = new UpgradeInventory("upgrades", this, 5, Set(Upgrades.SPEED))
   val progress = DataSlotFloat("progress", this).setUpdate(UpdateKind.SAVE, UpdateKind.GUI)
   val output = DataSlotItemStack("output", this).setUpdate(UpdateKind.SAVE)
+
+  val topLocked = DataSlotBoolean("topLocked", this, true).setUpdate(UpdateKind.SAVE, UpdateKind.GUI)
+  val bottomLocked = DataSlotBoolean("bottomLocked", this, true).setUpdate(UpdateKind.SAVE, UpdateKind.GUI)
+
+  persistLoad.listen(tag => {
+    // This forces the values to be true when loading from older versions
+    if (!tag.hasKey("topLocked")) topLocked := true
+    if (!tag.hasKey("bottomLocked")) bottomLocked := true
+  })
 
   def isWorking = output :!= null
 
@@ -142,7 +151,13 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
     case _ => false
   }
 
-  override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = slot == slots.output
+  override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = slot match {
+    case slots.output => true
+    case slots.top => (!topLocked) && (output :== null) && inv(slots.middle) == null
+    case slots.bottom => (!bottomLocked) && (output :== null) && inv(slots.middle) == null
+    case _ => false
+  }
+
   override def dropItems(): Unit = {
     super.dropItems()
     upgrades.dropInventory()

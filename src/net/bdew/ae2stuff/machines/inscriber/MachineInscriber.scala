@@ -12,6 +12,8 @@ package net.bdew.ae2stuff.machines.inscriber
 import appeng.api.config.Upgrades
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
+import net.bdew.ae2stuff.network.{MsgSetLock, NetHandler}
+import net.bdew.lib.Misc
 import net.bdew.lib.gui.GuiProvider
 import net.bdew.lib.machine.Machine
 import net.minecraft.entity.player.EntityPlayer
@@ -29,6 +31,17 @@ object MachineInscriber extends Machine("Inscriber", BlockInscriber) with GuiPro
   AE2Stuff.onPostInit.listen { ev =>
     // Can't do this too early, causes error
     Upgrades.SPEED.registerItem(new ItemStack(BlockInscriber), 5)
+  }
+
+  NetHandler.regServerHandler {
+    case (MsgSetLock(slot, lock), player) =>
+      Misc.asInstanceOpt(player.openContainer, classOf[ContainerInscriber]).foreach { cont =>
+        slot match {
+          case "top" => cont.te.topLocked := lock
+          case "bottom" => cont.te.bottomLocked := lock
+          case _ => sys.error("Invalid slot")
+        }
+      }
   }
 
   @SideOnly(Side.CLIENT)

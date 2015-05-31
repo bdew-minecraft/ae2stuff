@@ -10,6 +10,7 @@
 package net.bdew.ae2stuff.machines.inscriber
 
 import net.bdew.ae2stuff.AE2Textures
+import net.bdew.ae2stuff.misc.WidgetSlotLock
 import net.bdew.lib.Misc
 import net.bdew.lib.gui._
 import net.bdew.lib.gui.widgets.{WidgetFillDataSlot, WidgetLabel}
@@ -30,6 +31,8 @@ class GuiInscriber(cont: ContainerInscriber) extends BaseScreen(cont, if (cont.h
     widgets.add(new WidgetFillDataSlot(new Rect(135, 39, 6, 18), AE2Textures.inscriberProgress, Direction.UP, cont.te.progress, 1F) {
       override def handleTooltip(p: Point, tip: mutable.MutableList[String]) = tip += "%.0f".format(cont.te.progress * 100) + "%"
     })
+    widgets.add(WidgetSlotLock(Rect(45 - 11, 16 + 4, 8, 8), cont.te.topLocked, "top"))
+    widgets.add(WidgetSlotLock(Rect(45 - 11, 62 + 4, 8, 8), cont.te.bottomLocked, "bottom"))
   }
 
   override protected def drawGuiContainerBackgroundLayer(f: Float, x: Int, y: Int): Unit = {

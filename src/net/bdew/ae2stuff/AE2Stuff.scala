@@ -15,6 +15,8 @@ import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event._
 import cpw.mods.fml.common.network.NetworkRegistry
+import cpw.mods.fml.relauncher.Side
+import net.bdew.ae2stuff.misc.Icons
 import net.bdew.ae2stuff.network.NetHandler
 import net.bdew.lib.Event
 import net.bdew.lib.gui.GuiHandler
@@ -51,6 +53,9 @@ object AE2Stuff {
   def init(event: FMLInitializationEvent) {
     NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler)
     NetHandler.init()
+    if (event.getSide == Side.CLIENT) {
+      Icons.init()
+    }
     FMLInterModComms.sendMessage("Waila", "register", "net.bdew.ae2stuff.waila.WailaHandler.loadCallback")
   }
 
