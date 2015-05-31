@@ -14,6 +14,7 @@ import java.util
 import codechicken.nei.guihook.{IContainerInputHandler, IContainerTooltipHandler}
 import codechicken.nei.recipe.GuiCraftingRecipe
 import net.bdew.ae2stuff.machines.inscriber.GuiInscriber
+import net.bdew.lib.Misc
 import net.bdew.lib.gui.{Point, Rect}
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.item.ItemStack
@@ -34,7 +35,7 @@ object InscriberGuiHandler extends IContainerInputHandler with IContainerTooltip
 
   override def handleTooltip(guiContainer: GuiContainer, x: Int, y: Int, list: util.List[String]): util.List[String] = {
     if (guiContainer.isInstanceOf[GuiInscriber] && recipesRect.contains(Point(x - guiContainer.guiLeft, y - guiContainer.guiTop)))
-      list.add("Recipes")
+      list.add(Misc.toLocal("ae2stuff.gui.recipes"))
     list
   }
 

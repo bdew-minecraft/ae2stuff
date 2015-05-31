@@ -12,4 +12,6 @@ ae2stuff.gui.lock.on=Locked - Can't be removed with automation
 ae2stuff.gui.lock.off=Unlocked - Can be removed with automation
 ae2stuff.gui.lock.note=If no process is ongoing and middle slot is empty
 
+ae2stuff.gui.recipes=Recipes
+
 itemGroup.bdew.ae2stuff=AE2 Stuff
