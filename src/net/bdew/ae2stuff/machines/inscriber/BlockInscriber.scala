@@ -28,16 +28,21 @@ object BlockInscriber extends SimpleBlock("Inscriber", Material.iron) with HasTE
   setHardness(1)
 
   var topIcon: IIcon = null
+  var sideIconOn: IIcon = null
+  var sideIconOff: IIcon = null
 
   override def getIcon(side: Int, meta: Int) =
     if (side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal())
       topIcon
+    else if (meta == 1)
+      sideIconOn
     else
-      blockIcon
+      sideIconOff
 
   @SideOnly(Side.CLIENT)
   override def registerBlockIcons(reg: IIconRegister) {
-    blockIcon = reg.registerIcon(modId + ":inscriber/side")
+    sideIconOn = reg.registerIcon(modId + ":inscriber/side_on")
+    sideIconOff = reg.registerIcon(modId + ":inscriber/side_off")
     topIcon = reg.registerIcon(modId + ":inscriber/top")
   }
 

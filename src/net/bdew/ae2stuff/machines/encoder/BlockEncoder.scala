@@ -27,18 +27,23 @@ object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[Til
 
   setHardness(1)
 
-  var topIcon: IIcon = null
+  var topIconOn: IIcon = null
+  var topIconOff: IIcon = null
 
   override def getIcon(side: Int, meta: Int) =
     if (side == ForgeDirection.UP.ordinal())
-      topIcon
+      if (meta == 1)
+        topIconOn
+      else
+        topIconOff
     else
       blockIcon
 
   @SideOnly(Side.CLIENT)
   override def registerBlockIcons(reg: IIconRegister) {
     blockIcon = reg.registerIcon(modId + ":encoder/side")
-    topIcon = reg.registerIcon(modId + ":encoder/top")
+    topIconOn = reg.registerIcon(modId + ":encoder/top_on")
+    topIconOff = reg.registerIcon(modId + ":encoder/top_off")
   }
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffset: Float, yOffset: Float, zOffset: Float): Boolean = {

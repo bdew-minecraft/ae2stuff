@@ -9,14 +9,17 @@
 
 package net.bdew.ae2stuff.machines.encoder
 
+import appeng.api.networking.events.{MENetworkEventSubscribe, MENetworkPowerStatusChange}
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.Misc
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
+import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
+import net.minecraft.world.World
 
 class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with BreakableInventoryTile with SidedInventory {
   override def getSizeInventory = 12
@@ -84,4 +87,14 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
 
   override def getMachineRepresentation = new ItemStack(BlockEncoder)
   override def getIdlePowerUsage = MachineEncoder.idlePowerDraw
+
+  @MENetworkEventSubscribe
+  def networkPowerStatusChange(ev: MENetworkPowerStatusChange): Unit = {
+    val newMeta = if (node.isActive) 1 else 0
+    if (newMeta != worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) {
+      worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newMeta, 3)
+    }
+  }
+
+  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int) = oldBlock != newBlock
 }

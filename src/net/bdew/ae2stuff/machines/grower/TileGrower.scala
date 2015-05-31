@@ -19,7 +19,9 @@ import net.bdew.ae2stuff.misc.UpgradeInventory
 import net.bdew.lib.data.base.TileDataSlots
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
+import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
+import net.minecraft.world.World
 
 class TileGrower extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with BreakableInventoryTile with PoweredTile {
   override def getSizeInventory = 3 * 9
@@ -96,4 +98,8 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
     super.dropItems()
     upgrades.dropInventory()
   }
+
+  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int) = oldBlock != newBlock
+  onWake.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3))
+  onSleep.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3))
 }

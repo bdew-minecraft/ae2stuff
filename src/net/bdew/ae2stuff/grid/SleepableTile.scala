@@ -10,6 +10,7 @@
 package net.bdew.ae2stuff.grid
 
 import net.bdew.ae2stuff.AE2Stuff
+import net.bdew.lib.Event
 import net.bdew.lib.tile.TileExtended
 
 import scala.util.Random
@@ -25,17 +26,23 @@ trait SleepableTile extends TileExtended {
       wakeup()
   })
 
+  val onSleep = Event()
+  val onWake = Event()
+
   def isAwake = !sleeping
 
   def isSleeping = sleeping
 
   def sleep(): Unit = {
     if (TRACE && !sleeping) AE2Stuff.logInfo("SLEEP %s (%d,%d,%d)", getClass.getSimpleName, xCoord, yCoord, zCoord)
+    if (!sleeping) onSleep.trigger()
     sleeping = true
   }
 
   def wakeup(): Unit = {
     if (TRACE && sleeping) AE2Stuff.logInfo("WAKEUP %s (%d,%d,%d)", getClass.getSimpleName, xCoord, yCoord, zCoord)
+    if (sleeping) onWake.trigger()
     sleeping = false
   }
 }
+

@@ -19,7 +19,9 @@ import net.bdew.lib.data.base.{TileDataSlots, UpdateKind}
 import net.bdew.lib.data.{DataSlotFloat, DataSlotItemStack}
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
+import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
+import net.minecraft.world.World
 
 class TileInscriber extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with BreakableInventoryTile with PoweredTile {
   override def getSizeInventory = 4
@@ -145,4 +147,8 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
     super.dropItems()
     upgrades.dropInventory()
   }
+
+  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int) = oldBlock != newBlock
+  onWake.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3))
+  onSleep.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3))
 }
