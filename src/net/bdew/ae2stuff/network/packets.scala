@@ -11,6 +11,9 @@ package net.bdew.ae2stuff.network
 
 import net.bdew.lib.network.ItemStackSerialize
 
+@deprecated("Use MsgSetRecipe2 instead", "AE2Stuff 0.4")
 case class MsgSetRecipe(recipe: Map[Int, ItemStackSerialize]) extends NetHandler.Message
+
+case class MsgSetRecipe2(recipe: Map[Int, List[ItemStackSerialize]]) extends NetHandler.Message
 
 case class MsgSetLock(slot: String, lock: Boolean) extends NetHandler.Message

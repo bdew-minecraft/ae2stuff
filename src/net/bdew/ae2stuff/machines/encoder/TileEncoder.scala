@@ -9,7 +9,11 @@
 
 package net.bdew.ae2stuff.machines.encoder
 
+import java.util
+
 import appeng.api.networking.events.{MENetworkEventSubscribe, MENetworkPowerStatusChange}
+import appeng.api.networking.storage.IStorageGrid
+import appeng.util.item.AEItemStack
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.items.ItemUtils
@@ -20,6 +24,7 @@ import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
+import net.minecraftforge.oredict.OreDictionary
 
 class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with BreakableInventoryTile with SidedInventory {
   override def getSizeInventory = 12
@@ -71,6 +76,32 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
       ItemUtils.throwItemAt(getWorldObj, xCoord, yCoord, zCoord, getStackInSlot(slots.patterns))
     }
     inv = new Array[ItemStack](inv.length)
+  }
+
+  def findMatchingRecipeStack(stacks: List[ItemStack]): ItemStack = {
+    import scala.collection.JavaConversions._
+
+    // This is a hack to fix various borked NEI handlers, e.g. IC2
+    var allStacks = stacks
+    for (x <- stacks if x.getItemDamage == OreDictionary.WILDCARD_VALUE && x.getMaxDamage < x.getItemDamage) {
+      var toAdd = new util.ArrayList[ItemStack]()
+      x.getItem.getSubItems(x.getItem, null, toAdd)
+      allStacks = toAdd.toList ++ allStacks
+    }
+
+    val storage = node.getGrid.getCache[IStorageGrid](classOf[IStorageGrid]).getItemInventory.getStorageList
+
+    for {
+      stack <- allStacks
+      found <- Option(storage.findPrecise(AEItemStack.create(stack)))
+    } {
+      val copy = found.getItemStack.copy()
+      copy.stackSize = 1
+      return copy
+    }
+
+    // Get the virst variant if we can't find any matches
+    allStacks.head
   }
 
   // Inventory stuff

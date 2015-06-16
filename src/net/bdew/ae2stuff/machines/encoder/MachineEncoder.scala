@@ -10,11 +10,12 @@
 package net.bdew.ae2stuff.machines.encoder
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import net.bdew.ae2stuff.network.{MsgSetRecipe, NetHandler}
+import net.bdew.ae2stuff.network.{MsgSetRecipe, MsgSetRecipe2, NetHandler}
 import net.bdew.lib.Misc
 import net.bdew.lib.gui.GuiProvider
 import net.bdew.lib.machine.Machine
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.util.{ChatComponentText, ChatStyle, EnumChatFormatting}
 
 object MachineEncoder extends Machine("Encoder", BlockEncoder) with GuiProvider {
   override def guiId = 1
@@ -28,11 +29,20 @@ object MachineEncoder extends Machine("Encoder", BlockEncoder) with GuiProvider 
 
   NetHandler.regServerHandler {
     case (MsgSetRecipe(recipe), player) =>
+      player.addChatMessage(new ChatComponentText("Your client version of AE2 Stuff, please update")
+        .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)))
+
+    case (MsgSetRecipe2(recipe), player) =>
       Misc.asInstanceOpt(player.openContainer, classOf[ContainerEncoder]).foreach { cont =>
         for ((slotNum, recIdx) <- cont.te.slots.recipe.zipWithIndex) {
-          cont.te.setInventorySlotContents(slotNum, recipe.get(recIdx).map(_.stack).orNull)
+          if (recipe.isDefinedAt(recIdx))
+            cont.te.setInventorySlotContents(recIdx, cont.te.findMatchingRecipeStack(recipe(recIdx) map (_.stack)))
+          else
+            cont.te.setInventorySlotContents(recIdx, null)
         }
         cont.updateRecipe()
       }
+
   }
+
 }
