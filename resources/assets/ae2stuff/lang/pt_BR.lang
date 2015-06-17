@@ -1,0 +1,17 @@
+tile.ae2stuff.Encoder.name=Codificador de Padrões
+tile.ae2stuff.Grower.name=Câmara de Crescimento de Cristais
+tile.ae2stuff.Inscriber.name=Inscritor Avançado
+
+ae2stuff.error.not_connected=Rede não conectada
+
+ae2stuff.waila.sleep.true=Dormindo
+ae2stuff.waila.sleep.false=Trabalhando
+ae2stuff.waila.power=%s / %s AE
+
+ae2stuff.gui.lock.on=Trancado - Não pode ser removido com automação
+ae2stuff.gui.lock.off=Destrancado - Pode ser removido com automação
+ae2stuff.gui.lock.note=Se não há nenhum processo ocorrendo e o slot do meio estiver vazio
+
+ae2stuff.gui.recipes=Receitas
+
+itemGroup.bdew.ae2stuff=AE2 Stuff
