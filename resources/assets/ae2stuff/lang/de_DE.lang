@@ -1,0 +1,17 @@
+tile.ae2stuff.Encoder.name=Schablonenkodierer
+tile.ae2stuff.Grower.name=Kristallwachstumskammer
+tile.ae2stuff.Inscriber.name=Erweiterte Gravurmaschine
+
+ae2stuff.error.not_connected=Netzwerk nicht verbunden
+
+ae2stuff.waila.sleep.true=Ruhezustand
+ae2stuff.waila.sleep.false=Aktiv
+ae2stuff.waila.power=%s / %s AE
+
+ae2stuff.gui.lock.on=Geschützt - Kann mit Automatisierung nicht entfernt werden
+ae2stuff.gui.lock.off=Nicht geschützt - Kann mit Automatisierung entfernt werden
+ae2stuff.gui.lock.note=Wenn der mittlere Slot leer ist und keine Arbeit im Gange ist
+
+ae2stuff.gui.recipes=Rezepte
+
+itemGroup.bdew.ae2stuff=AE2 Stuff
