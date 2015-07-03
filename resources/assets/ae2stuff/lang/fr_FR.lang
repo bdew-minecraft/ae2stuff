@@ -1,4 +1,18 @@
 tile.ae2stuff.Encoder.name=Encodeur de modèle
 tile.ae2stuff.Grower.name=Chambre de croissance du crystal
+tile.ae2stuff.Inscriber.name=Inscriveur avancé
 
 ae2stuff.error.not_connected=Réseau non connecté
+
+ae2stuff.waila.sleep.true=En sommeil
+ae2stuff.waila.sleep.false=Au travail
+ae2stuff.waila.power=%s / %s AE
+
+ae2stuff.gui.lock.on=Verrouillé - Ne peut pas être enlevé par un automatisme
+ae2stuff.gui.lock.off=Déverrouillé - Peut être enlevé par un automatisme
+ae2stuff.gui.lock.note=Si aucun processe n'est en route et que l'emplacement du milieu est vide
+
+ae2stuff.gui.recipes=Recettes
+
+itemGroup.bdew.ae2stuff=AE2 Stuff
+
