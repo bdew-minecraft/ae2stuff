@@ -9,11 +9,13 @@
 
 package net.bdew.ae2stuff.network
 
-import net.bdew.lib.network.ItemStackSerialize
+import net.bdew.lib.network.{ItemStackSerialize, NBTTagCompoundSerialize}
 
 @deprecated("Use MsgSetRecipe2 instead", "AE2Stuff 0.4")
 case class MsgSetRecipe(recipe: Map[Int, ItemStackSerialize]) extends NetHandler.Message
 
 case class MsgSetRecipe2(recipe: Map[Int, List[ItemStackSerialize]]) extends NetHandler.Message
+
+case class MsgSetRecipe3(recipe: NBTTagCompoundSerialize) extends NetHandler.Message
 
 case class MsgSetLock(slot: String, lock: Boolean) extends NetHandler.Message
