@@ -78,13 +78,13 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     inv = new Array[ItemStack](inv.length)
   }
 
-  def findMatchingRecipeStack(stacks: List[ItemStack]): ItemStack = {
+  def findMatchingRecipeStack(stacks: Iterable[ItemStack]): ItemStack = {
     import scala.collection.JavaConversions._
 
     // This is a hack to fix various borked NEI handlers, e.g. IC2
     var allStacks = stacks
     for (x <- stacks if x.getItemDamage == OreDictionary.WILDCARD_VALUE && x.getMaxDamage < x.getItemDamage) {
-      var toAdd = new util.ArrayList[ItemStack]()
+      val toAdd = new util.ArrayList[ItemStack]()
       x.getItem.getSubItems(x.getItem, null, toAdd)
       allStacks = toAdd.toList ++ allStacks
     }
