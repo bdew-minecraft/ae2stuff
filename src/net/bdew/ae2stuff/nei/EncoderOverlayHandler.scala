@@ -24,7 +24,11 @@ object EncoderOverlayHandler extends IOverlayHandler {
     val stacks = (for (pStack <- items if pStack != null) yield {
       val x = (pStack.relx - 25) / 18
       val y = (pStack.rely - 6) / 18
-      val stacks = pStack.items.toList.filter(x => x != null && x.getItem != null) map { x => NBT.from(x.writeToNBT) }
+      val stacks = pStack.items.toList.filter(x => x != null && x.getItem != null) map { stack =>
+        val copy = stack.copy()
+        copy.stackSize = 1
+        NBT.from(copy.writeToNBT)
+      }
       (y * 3 + x) -> stacks
     }).toMap
     val data = new NBTTagCompound
