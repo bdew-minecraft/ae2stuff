@@ -12,12 +12,12 @@ package net.bdew.ae2stuff.grid
 import appeng.api.config.SecurityPermissions
 import appeng.api.networking.security.ISecurityGrid
 import appeng.api.networking.{IGrid, IGridNode}
-import appeng.core.WorldSettings
+import appeng.core.worlddata.WorldData
 import com.mojang.authlib.GameProfile
 import net.minecraft.entity.player.EntityPlayer
 
 object Security {
-  def getPlayerId(p: GameProfile): Int = WorldSettings.getInstance().getPlayerID(p)
+  def getPlayerId(p: GameProfile): Int = WorldData.instance().playerData().getPlayerID(p)
   def getPlayerId(e: EntityPlayer): Int = getPlayerId(e.getGameProfile)
 
   def getSecurityId(n: IGridNode) = {

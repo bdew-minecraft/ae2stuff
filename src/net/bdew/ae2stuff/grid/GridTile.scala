@@ -15,7 +15,6 @@ import appeng.api.AEApi
 import appeng.api.networking._
 import appeng.api.networking.events.MENetworkEvent
 import appeng.api.util.{AECableType, AEColor, DimensionalCoord}
-import appeng.core.WorldSettings
 import appeng.me.GridAccessException
 import cpw.mods.fml.common.FMLCommonHandler
 import net.bdew.lib.items.ItemUtils
@@ -34,7 +33,7 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   serverTick.listen(() => {
     if (!initialized) {
       if (placingPlayer != null)
-        getNode.setPlayerID(WorldSettings.getInstance().getPlayerID(placingPlayer.getGameProfile))
+        getNode.setPlayerID(Security.getPlayerId(placingPlayer.getGameProfile))
       getNode.updateState()
       initialized = true
     }
