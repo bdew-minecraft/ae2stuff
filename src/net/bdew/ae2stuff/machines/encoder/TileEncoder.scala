@@ -18,6 +18,7 @@ import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.nbt.NBT
+import net.bdew.lib.rotate.RotatableTile
 import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
 import net.minecraft.block.Block
@@ -26,7 +27,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraftforge.oredict.OreDictionary
 
-class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with BreakableInventoryTile with SidedInventory {
+class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with BreakableInventoryTile with SidedInventory with RotatableTile {
   override def getSizeInventory = 12
 
   object slots {

@@ -12,6 +12,7 @@ package net.bdew.ae2stuff.machines.encoder
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.block.{HasTE, SimpleBlock}
+import net.bdew.lib.rotate.{IconType, RotatableTileBlock}
 import net.bdew.lib.tile.inventory.BreakableInventoryBlock
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
@@ -20,9 +21,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.{ChatComponentTranslation, ChatStyle, EnumChatFormatting, IIcon}
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
 
-object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[TileEncoder] with BreakableInventoryBlock {
+object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[TileEncoder] with BreakableInventoryBlock with RotatableTileBlock {
   override val TEClass = classOf[TileEncoder]
 
   setHardness(1)
@@ -30,8 +30,8 @@ object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[Til
   var topIconOn: IIcon = null
   var topIconOff: IIcon = null
 
-  override def getIcon(side: Int, meta: Int) =
-    if (side == ForgeDirection.UP.ordinal())
+  override def getIcon(meta: Int, kind: IconType.Value): IIcon =
+    if (kind == IconType.FRONT)
       if (meta == 1)
         topIconOn
       else
@@ -60,6 +60,7 @@ object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[Til
   }
 
   override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, player: EntityLivingBase, stack: ItemStack) {
+    super.onBlockPlacedBy(world, x, y, z, player, stack)
     if (player.isInstanceOf[EntityPlayer])
       getTE(world, x, y, z).placingPlayer = player.asInstanceOf[EntityPlayer]
   }
