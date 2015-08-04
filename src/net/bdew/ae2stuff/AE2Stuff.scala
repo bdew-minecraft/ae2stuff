@@ -47,6 +47,7 @@ object AE2Stuff {
     configDir = new File(event.getModConfigurationDirectory, "AE2Stuff")
     TuningLoader.loadConfigFiles()
     Machines.load()
+    Items.load()
   }
 
   @EventHandler

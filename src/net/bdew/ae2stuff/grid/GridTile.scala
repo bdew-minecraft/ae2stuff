@@ -36,8 +36,8 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
       if (placingPlayer != null)
         getNode.setPlayerID(WorldSettings.getInstance().getPlayerID(placingPlayer.getGameProfile))
       getNode.updateState()
+      initialized = true
     }
-    initialized = true
   })
 
   persistSave.listen((tag) => {

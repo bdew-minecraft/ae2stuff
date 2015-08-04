@@ -12,11 +12,14 @@ package net.bdew.ae2stuff.waila
 import mcp.mobius.waila.api.IWailaRegistrar
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.ae2stuff.grid.PoweredTile
+import net.bdew.ae2stuff.machines.wireless.TileWireless
 
 object WailaHandler {
   def loadCallback(reg: IWailaRegistrar) {
     AE2Stuff.logDebug("WAILA callback received, loading...")
     reg.registerBodyProvider(WailaPoweredDataProvider, classOf[PoweredTile])
     reg.registerNBTProvider(WailaPoweredDataProvider, classOf[PoweredTile])
+    reg.registerBodyProvider(WailaWirelessDataProvider, classOf[TileWireless])
+    reg.registerNBTProvider(WailaWirelessDataProvider, classOf[TileWireless])
   }
 }
