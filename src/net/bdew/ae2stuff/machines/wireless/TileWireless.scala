@@ -25,7 +25,7 @@ import net.minecraft.world.World
 class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
   val cfg = MachineWireless
 
-  val link = DataSlotPos("link", this).setUpdate(UpdateKind.SAVE)
+  val link = DataSlotPos("link", this).setUpdate(UpdateKind.SAVE, UpdateKind.WORLD)
 
   var connection: IGridConnection = null
 
