@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11
 object WirelessOverlayRender extends WorldOverlayRenderer {
   override def doRender(partialTicks: Float): Unit = {
     val mop = Client.minecraft.objectMouseOver
-    if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+    if (mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
       val pos = BlockRef(mop.blockX, mop.blockY, mop.blockZ)
       for {
         tile <- pos.getTile[TileWireless](Client.world)
