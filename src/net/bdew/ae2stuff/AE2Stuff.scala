@@ -16,6 +16,7 @@ import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event._
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.relauncher.Side
+import net.bdew.ae2stuff.items.visualiser.{VisualiserOverlayRender, VisualiserPlayerTracker}
 import net.bdew.ae2stuff.machines.wireless.WirelessOverlayRender
 import net.bdew.ae2stuff.misc.{Icons, OverlayRenderHandler}
 import net.bdew.ae2stuff.network.NetHandler
@@ -58,7 +59,9 @@ object AE2Stuff {
     if (event.getSide == Side.CLIENT) {
       Icons.init()
       OverlayRenderHandler.register(WirelessOverlayRender)
+      OverlayRenderHandler.register(VisualiserOverlayRender)
     }
+    VisualiserPlayerTracker.init()
     FMLInterModComms.sendMessage("Waila", "register", "net.bdew.ae2stuff.waila.WailaHandler.loadCallback")
   }
 
@@ -68,5 +71,10 @@ object AE2Stuff {
   def postInit(event: FMLPostInitializationEvent) {
     TuningLoader.loadDelayed()
     onPostInit.trigger(event)
+  }
+
+  @EventHandler
+  def onServerStarting(event: FMLServerStartingEvent): Unit = {
+    VisualiserPlayerTracker.clear()
   }
 }

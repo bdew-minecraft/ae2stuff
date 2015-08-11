@@ -10,10 +10,13 @@
 package net.bdew.ae2stuff
 
 import net.bdew.ae2stuff.items.ItemWirelessKit
+import net.bdew.ae2stuff.items.visualiser.ItemVisualiser
 import net.bdew.ae2stuff.machines.wireless.MachineWireless
 import net.bdew.lib.config.ItemManager
 
 object Items extends ItemManager(CreativeTabs.main) {
   if (MachineWireless.enabled)
     regItem(ItemWirelessKit)
+
+  regItem(ItemVisualiser)
 }

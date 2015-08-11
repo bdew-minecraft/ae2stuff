@@ -14,39 +14,15 @@ import java.util
 import appeng.api.config.SecurityPermissions
 import net.bdew.ae2stuff.grid.Security
 import net.bdew.ae2stuff.machines.wireless.{BlockWireless, TileWireless}
+import net.bdew.ae2stuff.misc.ItemLocationStore
 import net.bdew.lib.Misc
 import net.bdew.lib.block.BlockRef
 import net.bdew.lib.items.SimpleItem
-import net.bdew.lib.nbt.NBT
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 
-object ItemWirelessKit extends SimpleItem("WirelessKit") {
-  def hasLocation(stack: ItemStack) =
-    stack.getItem == this && stack.hasTagCompound && stack.getTagCompound.hasKey("loc")
-
-  def getLocation(stack: ItemStack) =
-    BlockRef.fromNBT(stack.getTagCompound.getCompoundTag("loc"))
-
-  def getDimension(stack: ItemStack) =
-    stack.getTagCompound.getInteger("dim")
-
-  def setLocation(stack: ItemStack, loc: BlockRef, dimension: Int) = {
-    if (!stack.hasTagCompound) stack.setTagCompound(new NBTTagCompound)
-    val tag = stack.getTagCompound
-    tag.setTag("loc", NBT.from(loc.writeToNBT _))
-    tag.setInteger("dim", dimension)
-  }
-
-  def clearLocation(stack: ItemStack) = {
-    if (stack.hasTagCompound) {
-      stack.getTagCompound.removeTag("loc")
-      stack.getTagCompound.removeTag("dim")
-    }
-  }
-
+object ItemWirelessKit extends SimpleItem("WirelessKit") with ItemLocationStore {
   def checkSecurity(t1: TileWireless, t2: TileWireless, p: EntityPlayer) = {
     val pid = Security.getPlayerId(p)
     Security.playerHasPermission(t1.getNode.getGrid, pid, SecurityPermissions.BUILD) &&
