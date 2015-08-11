@@ -11,6 +11,7 @@ package net.bdew.ae2stuff.machines.encoder
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
+import net.bdew.lib.Misc
 import net.bdew.lib.block.{HasTE, SimpleBlock}
 import net.bdew.lib.rotate.{IconType, RotatableTileBlock}
 import net.bdew.lib.tile.inventory.BreakableInventoryBlock
@@ -41,9 +42,9 @@ object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[Til
 
   @SideOnly(Side.CLIENT)
   override def registerBlockIcons(reg: IIconRegister) {
-    blockIcon = reg.registerIcon(modId + ":encoder/side")
-    topIconOn = reg.registerIcon(modId + ":encoder/top_on")
-    topIconOff = reg.registerIcon(modId + ":encoder/top_off")
+    blockIcon = reg.registerIcon(Misc.iconName(modId, name, "side"))
+    topIconOn = reg.registerIcon(Misc.iconName(modId, name, "top_on"))
+    topIconOff = reg.registerIcon(Misc.iconName(modId, name, "top_off"))
   }
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffset: Float, yOffset: Float, zOffset: Float): Boolean = {

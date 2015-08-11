@@ -11,6 +11,7 @@ package net.bdew.ae2stuff.machines.inscriber
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
+import net.bdew.lib.Misc
 import net.bdew.lib.block.{HasTE, SimpleBlock}
 import net.bdew.lib.tile.inventory.BreakableInventoryBlock
 import net.minecraft.block.material.Material
@@ -41,9 +42,9 @@ object BlockInscriber extends SimpleBlock("Inscriber", Material.iron) with HasTE
 
   @SideOnly(Side.CLIENT)
   override def registerBlockIcons(reg: IIconRegister) {
-    sideIconOn = reg.registerIcon(modId + ":inscriber/side_on")
-    sideIconOff = reg.registerIcon(modId + ":inscriber/side_off")
-    topIcon = reg.registerIcon(modId + ":inscriber/top")
+    sideIconOn = reg.registerIcon(Misc.iconName(modId, name, "side_on"))
+    sideIconOff = reg.registerIcon(Misc.iconName(modId, name, "side_off"))
+    topIcon = reg.registerIcon(Misc.iconName(modId, name, "top"))
   }
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffset: Float, yOffset: Float, zOffset: Float): Boolean = {
