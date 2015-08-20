@@ -10,6 +10,7 @@
 package net.bdew.ae2stuff.machines.wireless
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.bdew.lib.Misc
 import net.bdew.lib.block.{HasTE, SimpleBlock}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
@@ -53,9 +54,9 @@ object BlockWireless extends SimpleBlock("Wireless", Material.iron) with HasTE[T
 
   @SideOnly(Side.CLIENT)
   override def registerBlockIcons(reg: IIconRegister): Unit = {
-    icon_on_side = reg.registerIcon(modId + ":wireless/side_on")
-    icon_off_side = reg.registerIcon(modId + ":wireless/side_off")
-    icon_on_top = reg.registerIcon(modId + ":wireless/top_on")
-    icon_off_top = reg.registerIcon(modId + ":wireless/top_off")
+    icon_on_side = reg.registerIcon(Misc.iconName(modId, name, "side_on"))
+    icon_off_side = reg.registerIcon(Misc.iconName(modId, name, "side_off"))
+    icon_on_top = reg.registerIcon(Misc.iconName(modId, name, "top_on"))
+    icon_off_top = reg.registerIcon(Misc.iconName(modId, name, "top_off"))
   }
 }
