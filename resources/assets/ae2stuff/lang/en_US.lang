@@ -4,6 +4,7 @@ tile.ae2stuff.Inscriber.name=Advanced Inscriber
 tile.ae2stuff.Wireless.name=Wireless Connector
 
 item.ae2stuff.WirelessKit.name=Wireless Setup Kit
+item.ae2stuff.Visualiser.name=Network Visualisation Tool
 
 ae2stuff.error.not_connected=Network not connected
 

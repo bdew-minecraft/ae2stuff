@@ -46,8 +46,6 @@ object ItemVisualiser extends SimpleItem("Visualiser") with ItemLocationStore {
     val loc = getLocation(stack)
 
     if ((dim == world.provider.dimensionId) && VisualiserPlayerTracker.needToUpdate(player, loc, dim)) {
-      println("Send update to %s".format(player.getDisplayName))
-
       for {
         host <- loc.getTile[IGridHost](world)
         node <- Option(host.getGridNode(ForgeDirection.UNKNOWN))
