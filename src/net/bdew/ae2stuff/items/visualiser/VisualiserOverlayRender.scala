@@ -85,11 +85,11 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
     GL11.glEnd()
   }
 
-  def renderLinks(links: Seq[VLink], width: Float): Unit = {
+  def renderLinks(links: Seq[VLink], width: Float, onlyP2P: Boolean): Unit = {
     GL11.glLineWidth(width)
     GL11.glBegin(GL11.GL_LINES)
 
-    for (link <- links) {
+    for (link <- links if (!onlyP2P) || link.flags.contains(VLinkFlags.COMPRESSED)) {
       if (link.flags.contains(VLinkFlags.COMPRESSED)) {
         GL11.glColor3f(1, 0, 1)
       } else if (link.flags.contains(VLinkFlags.DENSE)) {
@@ -105,10 +105,16 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
     GL11.glEnd()
   }
 
+  val renderNodesModes = Set(VisualisationModes.NODES, VisualisationModes.FULL, VisualisationModes.NONUM)
+  val renderLinksModes = Set(VisualisationModes.CHANNELS, VisualisationModes.FULL, VisualisationModes.NONUM, VisualisationModes.P2P)
+
   override def doRender(partialTicks: Float): Unit = {
     if (Client.player != null) {
       val stack = Client.player.inventory.getCurrentItem
       if (stack != null && stack.getItem == ItemVisualiser) {
+
+        val mode = ItemVisualiser.getMode(stack)
+
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT)
 
         GL11.glDisable(GL11.GL_LIGHTING)
@@ -119,13 +125,16 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
           needListRefresh = false
           GL11.glNewList(staticList, GL11.GL_COMPILE)
 
-          renderNodes()
+          if (renderNodesModes.contains(mode))
+            renderNodes()
 
           GL11.glEnable(GL11.GL_LINE_SMOOTH)
           GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST)
 
-          renderLinks(dense, 16F)
-          renderLinks(normal, 4F)
+          if (renderLinksModes.contains(mode)) {
+            renderLinks(dense, 16F, mode == VisualisationModes.P2P)
+            renderLinks(normal, 4F, mode == VisualisationModes.P2P)
+          }
 
           GL11.glEndList()
         }
@@ -135,9 +144,11 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
 
         // Labels are rendered every frame because they need to face the camera
 
-        for (link <- currentLinks.links if link.channels > 0) {
-          OverlayRenderHandler.renderFloatingText(link.channels.toString,
-            (link.node1.x + link.node2.x) / 2D + 0.5D, (link.node1.y + link.node2.y) / 2D + 0.5D, (link.node1.z + link.node2.z) / 2D + 0.5D, 0xFFFFFF)
+        if (mode == VisualisationModes.FULL) {
+          for (link <- currentLinks.links if link.channels > 0) {
+            OverlayRenderHandler.renderFloatingText(link.channels.toString,
+              (link.node1.x + link.node2.x) / 2D + 0.5D, (link.node1.y + link.node2.y) / 2D + 0.5D, (link.node1.z + link.node2.z) / 2D + 0.5D, 0xFFFFFF)
+          }
         }
 
         GL11.glPopAttrib()

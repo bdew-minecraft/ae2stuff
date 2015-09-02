@@ -34,5 +34,12 @@ ae2stuff.wireless.tool.security.network=Security violation - networks can't conn
 ae2stuff.wireless.tool.security.player=Security violation - you are not allowed to modify this network
 
 ae2stuff.visualiser.bound=Visualising network at %s,%s,%s
+ae2stuff.visualiser.mode=Mode:
+ae2stuff.visualiser.set=Mode changed to %s
+ae2stuff.visualiser.mode.full=Show Everything
+ae2stuff.visualiser.mode.nodes=Show Nodes
+ae2stuff.visualiser.mode.channels=Show Channels
+ae2stuff.visualiser.mode.nonum=Show Channels and Nodes
+ae2stuff.visualiser.mode.p2p=Show P2P Links
 
 itemGroup.bdew.ae2stuff=AE2 Stuff

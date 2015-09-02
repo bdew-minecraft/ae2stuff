@@ -78,3 +78,8 @@ class VisualisationData(var nodes: Seq[VNode], var links: Seq[VLink]) extends Ex
 object VisualisationData {
   final val VERSION = 1
 }
+
+object VisualisationModes extends Enumeration {
+  val FULL, NODES, CHANNELS, NONUM, P2P = Value
+  val modes = List(FULL, NODES, CHANNELS, NONUM, P2P)
+}
