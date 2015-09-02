@@ -9,15 +9,21 @@
 
 package net.bdew.ae2stuff.items.visualiser
 
+import java.util
+import java.util.Locale
+
 import appeng.api.networking.{GridFlags, IGridConnection, IGridHost}
 import net.bdew.ae2stuff.misc.ItemLocationStore
-import net.bdew.ae2stuff.network.{MsgVisualisationData, NetHandler}
+import net.bdew.ae2stuff.network.{MsgVisualisationData, MsgVisualisationMode, NetHandler}
+import net.bdew.lib.Misc
 import net.bdew.lib.block.BlockRef
 import net.bdew.lib.helpers.ChatHelper._
 import net.bdew.lib.items.SimpleItem
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.EnumChatFormatting
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
@@ -34,6 +40,28 @@ object ItemVisualiser extends SimpleItem("Visualiser") with ItemLocationStore {
     true
   }
 
+  def getMode(stack: ItemStack) = {
+    if (stack.hasTagCompound)
+      VisualisationModes(stack.getTagCompound.getByte("mode"))
+    else
+      VisualisationModes.FULL
+  }
+
+  def setMode(stack: ItemStack, mode: VisualisationModes.Value) = {
+    if (!stack.hasTagCompound) stack.setTagCompound(new NBTTagCompound)
+    stack.getTagCompound.setByte("mode", mode.id.toByte)
+  }
+
+  NetHandler.regServerHandler {
+    case (MsgVisualisationMode(mode), player) =>
+      if (player.inventory.getCurrentItem != null && player.inventory.getCurrentItem.getItem == this) {
+        setMode(player.inventory.getCurrentItem, mode)
+
+        import net.bdew.lib.helpers.ChatHelper._
+        player.addChatMessage(L("ae2stuff.visualiser.set", L("ae2stuff.visualiser.mode." + mode.toString.toLowerCase(Locale.US)).setColor(Color.YELLOW)))
+      }
+  }
+
   override def onUpdate(stack: ItemStack, world: World, entity: Entity, slot: Int, active: Boolean): Unit = {
     if (!active || world.isRemote || !entity.isInstanceOf[EntityPlayerMP]) return
 
@@ -46,8 +74,6 @@ object ItemVisualiser extends SimpleItem("Visualiser") with ItemLocationStore {
     val loc = getLocation(stack)
 
     if ((dim == world.provider.dimensionId) && VisualiserPlayerTracker.needToUpdate(player, loc, dim)) {
-      println("Send update to %s".format(player.getDisplayName))
-
       for {
         host <- loc.getTile[IGridHost](world)
         node <- Option(host.getGridNode(ForgeDirection.UNKNOWN))
@@ -83,4 +109,14 @@ object ItemVisualiser extends SimpleItem("Visualiser") with ItemLocationStore {
       }
     }
   }
+
+  override def addInformation(stack: ItemStack, player: EntityPlayer, list: util.List[_], extended: Boolean): Unit = {
+    val strings = list.asInstanceOf[util.List[String]]
+    strings.add("%s %s%s".format(
+      Misc.toLocal("ae2stuff.visualiser.mode"),
+      EnumChatFormatting.YELLOW,
+      Misc.toLocal("ae2stuff.visualiser.mode." + getMode(stack).toString.toLowerCase(Locale.US))
+    ))
+  }
+
 }

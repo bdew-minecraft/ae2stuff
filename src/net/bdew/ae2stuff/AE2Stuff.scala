@@ -18,7 +18,7 @@ import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.relauncher.Side
 import net.bdew.ae2stuff.items.visualiser.{VisualiserOverlayRender, VisualiserPlayerTracker}
 import net.bdew.ae2stuff.machines.wireless.WirelessOverlayRender
-import net.bdew.ae2stuff.misc.{Icons, OverlayRenderHandler}
+import net.bdew.ae2stuff.misc.{Icons, MouseEventHandler, OverlayRenderHandler}
 import net.bdew.ae2stuff.network.NetHandler
 import net.bdew.lib.Event
 import net.bdew.lib.gui.GuiHandler
@@ -60,6 +60,7 @@ object AE2Stuff {
       Icons.init()
       OverlayRenderHandler.register(WirelessOverlayRender)
       OverlayRenderHandler.register(VisualiserOverlayRender)
+      MouseEventHandler.init()
     }
     VisualiserPlayerTracker.init()
     FMLInterModComms.sendMessage("Waila", "register", "net.bdew.ae2stuff.waila.WailaHandler.loadCallback")
