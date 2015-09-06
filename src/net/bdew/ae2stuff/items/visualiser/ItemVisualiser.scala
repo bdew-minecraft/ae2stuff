@@ -28,6 +28,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
 object ItemVisualiser extends SimpleItem("Visualiser") with ItemLocationStore {
+  setMaxStackSize(1)
 
   override def onItemUse(stack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, side: Int, xOff: Float, yOff: Float, zOff: Float): Boolean = {
     if (!world.isRemote) {
