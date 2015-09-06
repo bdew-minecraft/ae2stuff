@@ -23,6 +23,9 @@ import net.minecraft.world.World
 
 object BlockWireless extends SimpleBlock("Wireless", MachineMaterial) with HasTE[TileWireless] with BlockWrenchable {
   override val TEClass = classOf[TileWireless]
+
+  setHardness(1)
+
   override def breakBlock(world: World, x: Int, y: Int, z: Int, block: Block, meta: Int): Unit = {
     getTE(world, x, y, z).doUnlink()
     super.breakBlock(world, x, y, z, block, meta)
