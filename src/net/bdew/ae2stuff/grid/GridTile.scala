@@ -50,7 +50,8 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
       node.destroy()
     if (FMLCommonHandler.instance().getEffectiveSide.isServer) {
       node = AEApi.instance().createGridNode(this)
-      node.loadFromNBT("ae_node", tag)
+      if (tag.hasKey("ae_node"))
+        node.loadFromNBT("ae_node", tag)
     }
     initialized = false
   })

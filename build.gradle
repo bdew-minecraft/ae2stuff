@@ -63,6 +63,14 @@ repositories {
         name "waila"
         url "http://mobiusstrip.eu/maven"
     }
+    ivy {
+        name "CoFHLib"
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhlib.cf}/[module]-[revision](-[classifier])(.[ext])"
+    }
+    ivy {
+        name "BuildCraft"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+    }
 }
 
 dependencies {
@@ -71,6 +79,9 @@ dependencies {
     compile "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"
     compile "codechicken:CodeChickenLib:${config.minecraft.version}-${config.ccl.version}:dev"
     compile "codechicken:CodeChickenCore:${config.minecraft.version}-${config.ccc.version}:dev"
+
+    compile "com.mod-buildcraft:buildcraft:${config.buildcraft.version}:dev"
+    compile ":CoFHLib:${config.cofhlib.version}:dev@jar"
 
     compile module("mcp.mobius.waila:Waila:${config.waila.version}_${config.minecraft.version}") {
         transitive = false // WAILA is depending on an invalid combination of CCC/NEI that doesn't run...
