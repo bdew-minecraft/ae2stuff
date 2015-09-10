@@ -16,18 +16,18 @@ import appeng.api.networking.storage.IStorageGrid
 import appeng.util.item.AEItemStack
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.GridTile
-import net.bdew.lib.items.ItemUtils
+import net.bdew.lib.block.TileKeepData
 import net.bdew.lib.nbt.NBT
 import net.bdew.lib.rotate.RotatableTile
 import net.bdew.lib.tile.TileExtended
-import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
+import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
 import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraftforge.oredict.OreDictionary
 
-class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with BreakableInventoryTile with SidedInventory with RotatableTile {
+class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with SidedInventory with RotatableTile with TileKeepData {
   override def getSizeInventory = 12
 
   object slots {
@@ -72,13 +72,6 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     newStack
   }
 
-  override def dropItems() {
-    if (getWorldObj != null && !getWorldObj.isRemote && getStackInSlot(slots.patterns) != null) {
-      ItemUtils.throwItemAt(getWorldObj, xCoord, yCoord, zCoord, getStackInSlot(slots.patterns))
-    }
-    inv = new Array[ItemStack](inv.length)
-  }
-
   def findMatchingRecipeStack(stacks: Iterable[ItemStack]): ItemStack = {
     import scala.collection.JavaConversions._
 
@@ -103,6 +96,11 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
 
     // Get the virst variant if we can't find any matches
     allStacks.head
+  }
+
+  override def afterTileBreakSave(t: NBTTagCompound): NBTTagCompound = {
+    t.removeTag("ae_node")
+    t
   }
 
   // Inventory stuff

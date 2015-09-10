@@ -11,10 +11,9 @@ package net.bdew.ae2stuff.machines.inscriber
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
+import net.bdew.ae2stuff.misc.{BlockWrenchable, MachineMaterial}
 import net.bdew.lib.Misc
-import net.bdew.lib.block.{HasTE, SimpleBlock}
-import net.bdew.lib.tile.inventory.BreakableInventoryBlock
-import net.minecraft.block.material.Material
+import net.bdew.lib.block.{BlockKeepData, HasTE, SimpleBlock}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -23,7 +22,7 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
-object BlockInscriber extends SimpleBlock("Inscriber", Material.iron) with HasTE[TileInscriber] with BreakableInventoryBlock {
+object BlockInscriber extends SimpleBlock("Inscriber", MachineMaterial) with HasTE[TileInscriber] with BlockWrenchable with BlockKeepData {
   override val TEClass = classOf[TileInscriber]
 
   setHardness(1)
@@ -47,9 +46,8 @@ object BlockInscriber extends SimpleBlock("Inscriber", Material.iron) with HasTE
     topIcon = reg.registerIcon(Misc.iconName(modId, name, "top"))
   }
 
-  override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffset: Float, yOffset: Float, zOffset: Float): Boolean = {
-    if (!world.isRemote)
-      player.openGui(AE2Stuff, MachineInscriber.guiId, world, x, y, z)
+  override def onBlockActivatedReal(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffs: Float, yOffs: Float, zOffs: Float): Boolean = {
+    player.openGui(AE2Stuff, MachineInscriber.guiId, world, x, y, z)
     true
   }
 

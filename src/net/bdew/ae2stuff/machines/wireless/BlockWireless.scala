@@ -10,10 +10,10 @@
 package net.bdew.ae2stuff.machines.wireless
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.bdew.ae2stuff.misc.{BlockWrenchable, MachineMaterial}
 import net.bdew.lib.Misc
 import net.bdew.lib.block.{HasTE, SimpleBlock}
 import net.minecraft.block.Block
-import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -21,8 +21,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
 
-object BlockWireless extends SimpleBlock("Wireless", Material.iron) with HasTE[TileWireless] {
+object BlockWireless extends SimpleBlock("Wireless", MachineMaterial) with HasTE[TileWireless] with BlockWrenchable {
   override val TEClass = classOf[TileWireless]
+
+  setHardness(1)
+
   override def breakBlock(world: World, x: Int, y: Int, z: Int, block: Block, meta: Int): Unit = {
     getTE(world, x, y, z).doUnlink()
     super.breakBlock(world, x, y, z, block, meta)
@@ -32,6 +35,8 @@ object BlockWireless extends SimpleBlock("Wireless", Material.iron) with HasTE[T
     if (player.isInstanceOf[EntityPlayer])
       getTE(world, x, y, z).placingPlayer = player.asInstanceOf[EntityPlayer]
   }
+
+  override def onBlockActivatedReal(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffs: Float, yOffs: Float, zOffs: Float): Boolean = false
 
   var icon_on_side: IIcon = null
   var icon_off_side: IIcon = null

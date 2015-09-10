@@ -11,11 +11,10 @@ package net.bdew.ae2stuff.machines.encoder
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
+import net.bdew.ae2stuff.misc.{BlockWrenchable, MachineMaterial}
 import net.bdew.lib.Misc
-import net.bdew.lib.block.{HasTE, SimpleBlock}
+import net.bdew.lib.block.{BlockKeepData, HasTE, SimpleBlock}
 import net.bdew.lib.rotate.{IconType, RotatableTileBlock}
-import net.bdew.lib.tile.inventory.BreakableInventoryBlock
-import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -23,7 +22,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.{ChatComponentTranslation, ChatStyle, EnumChatFormatting, IIcon}
 import net.minecraft.world.World
 
-object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[TileEncoder] with BreakableInventoryBlock with RotatableTileBlock {
+object BlockEncoder extends SimpleBlock("Encoder", MachineMaterial) with HasTE[TileEncoder] with RotatableTileBlock with BlockWrenchable with BlockKeepData {
   override val TEClass = classOf[TileEncoder]
 
   setHardness(1)
@@ -47,15 +46,14 @@ object BlockEncoder extends SimpleBlock("Encoder", Material.iron) with HasTE[Til
     topIconOff = reg.registerIcon(Misc.iconName(modId, name, "top_off"))
   }
 
-  override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffset: Float, yOffset: Float, zOffset: Float): Boolean = {
-    if (!world.isRemote) {
-      if (getTE(world, x, y, z).getNode.isActive)
-        player.openGui(AE2Stuff, MachineEncoder.guiId, world, x, y, z)
-      else
-        player.addChatMessage(
-          new ChatComponentTranslation("ae2stuff.error.not_connected")
-            .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))
-        )
+  override def onBlockActivatedReal(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffs: Float, yOffs: Float, zOffs: Float): Boolean = {
+    if (getTE(world, x, y, z).getNode.isActive) {
+      player.openGui(AE2Stuff, MachineEncoder.guiId, world, x, y, z)
+    } else {
+      player.addChatMessage(
+        new ChatComponentTranslation("ae2stuff.error.not_connected")
+          .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))
+      )
     }
     true
   }

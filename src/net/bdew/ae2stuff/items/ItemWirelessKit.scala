@@ -23,6 +23,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
 object ItemWirelessKit extends SimpleItem("WirelessKit") with ItemLocationStore {
+  setMaxStackSize(1)
+  
   def checkSecurity(t1: TileWireless, t2: TileWireless, p: EntityPlayer) = {
     val pid = Security.getPlayerId(p)
     Security.playerHasPermission(t1.getNode.getGrid, pid, SecurityPermissions.BUILD) &&

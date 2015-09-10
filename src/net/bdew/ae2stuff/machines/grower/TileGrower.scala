@@ -16,14 +16,16 @@ import cpw.mods.fml.common.registry.GameRegistry
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.{GridTile, PoweredTile}
 import net.bdew.ae2stuff.misc.UpgradeInventory
+import net.bdew.lib.block.TileKeepData
 import net.bdew.lib.data.base.TileDataSlots
 import net.bdew.lib.items.ItemUtils
-import net.bdew.lib.tile.inventory.{BreakableInventoryTile, PersistentInventoryTile, SidedInventory}
+import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
 import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 
-class TileGrower extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with BreakableInventoryTile with PoweredTile {
+class TileGrower extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with PoweredTile with TileKeepData {
   override def getSizeInventory = 3 * 9
   override def getMachineRepresentation = new ItemStack(BlockGrower)
   override def powerCapacity = MachineGrower.powerCapacity
@@ -71,6 +73,11 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
     }
   })
 
+  override def afterTileBreakSave(t: NBTTagCompound): NBTTagCompound = {
+    t.removeTag("ae_node")
+    t
+  }
+
   override def onGridNotification(p1: GridNotification): Unit = {
     wakeup()
   }
@@ -93,11 +100,6 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
       )
 
   override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = !isItemValidForSlot(slot, stack)
-
-  override def dropItems(): Unit = {
-    super.dropItems()
-    upgrades.dropInventory()
-  }
 
   override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int) = oldBlock != newBlock
   onWake.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3))
