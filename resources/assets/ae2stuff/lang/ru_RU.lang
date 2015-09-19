@@ -1,12 +1,12 @@
 tile.ae2stuff.Encoder.name=Кодировщик шаблонов
-tile.ae2stuff.Grower.name=Камера выращивания кристаллов
+tile.ae2stuff.Grower.name=Камера для выращивания кристаллов
 tile.ae2stuff.Inscriber.name=Продвинутый высекатель
 tile.ae2stuff.Wireless.name=Беспроводной соединитель
 
 item.ae2stuff.WirelessKit.name=Набор для настройки беспроводного соединителя
 item.ae2stuff.Visualiser.name=Устройство визуализации Сети
 
-ae2stuff.error.not_connected=Нет соединения
+ae2stuff.error.not_connected=Нет соединения с сетью
 
 ae2stuff.waila.sleep.true=Отключено
 ae2stuff.waila.sleep.false=Работает
@@ -33,7 +33,7 @@ ae2stuff.wireless.tool.noexist=Привязанного соединителя �
 ae2stuff.wireless.tool.security.network=Ошибка безопасности - нельзя соединить сети
 ae2stuff.wireless.tool.security.player=Ошибка безопасности - Вы не можете изменять физическую конфигурацию сети
 
-ae2stuff.visualiser.bound=Визуализируем сеть, находяющуюся на %s,%s,%s
+ae2stuff.visualiser.bound=Визуализируем сеть, находящуюся на %s,%s,%s
 ae2stuff.visualiser.mode=Режим:
 ae2stuff.visualiser.set=Режим изменен на %s
 ae2stuff.visualiser.mode.full=Показывать Всё
