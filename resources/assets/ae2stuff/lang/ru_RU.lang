@@ -1,6 +1,45 @@
 tile.ae2stuff.Encoder.name=Кодировщик шаблонов
-tile.ae2stuff.Grower.name=Камера для выращивания кристаллов
+tile.ae2stuff.Grower.name=Камера выращивания кристаллов
+tile.ae2stuff.Inscriber.name=Продвинутый высекатель
+tile.ae2stuff.Wireless.name=Беспроводной соединитель
 
-ae2stuff.error.not_connected=Нет соединения с сетью
+item.ae2stuff.WirelessKit.name=Набор для настройки беспроводного соединителя
+item.ae2stuff.Visualiser.name=Устройство визуализации Сети
+
+ae2stuff.error.not_connected=Нет соединения
+
+ae2stuff.waila.sleep.true=Отключено
+ae2stuff.waila.sleep.false=Работает
+ae2stuff.waila.power=%s / %s AE
+
+ae2stuff.waila.wireless.connected=Подключено к с %s,%s,%s
+ae2stuff.waila.wireless.notconnected=Не подключено
+ae2stuff.waila.wireless.channels=Кол-во каналов: %s
+ae2stuff.waila.wireless.power=Энергии используется : %s AE/t
+
+ae2stuff.gui.lock.on=Locked - Не может быть удалено автоматически
+ae2stuff.gui.lock.off=Unlocked - Может быть удалено автоматически
+ae2stuff.gui.lock.note=Если ничего не производит, а средний слот пуст
+
+ae2stuff.gui.recipes=Рецепты
+
+ae2stuff.wireless.tool.empty=Используйте на беспроводной соединитель для привязки
+ae2stuff.wireless.tool.bound1=Привязка на %s,%s,%s
+ae2stuff.wireless.tool.bound2=Используйте на другой беспроводной соединитель, чтобы подключить его к предыдущему
+ae2stuff.wireless.tool.connected=Подключено к %s,%s,%s
+ae2stuff.wireless.tool.failed=Соединение не состоялось
+ae2stuff.wireless.tool.dimension=Соединители не могут находиться в разных измерениях
+ae2stuff.wireless.tool.noexist=Привязанного соединителя больше не существует
+ae2stuff.wireless.tool.security.network=Ошибка безопасности - нельзя соединить сети
+ae2stuff.wireless.tool.security.player=Ошибка безопасности - Вы не можете изменять физическую конфигурацию сети
+
+ae2stuff.visualiser.bound=Визуализируем сеть, находяющуюся на %s,%s,%s
+ae2stuff.visualiser.mode=Режим:
+ae2stuff.visualiser.set=Режим изменен на %s
+ae2stuff.visualiser.mode.full=Показывать Всё
+ae2stuff.visualiser.mode.nodes=Показывать Узлы Сети
+ae2stuff.visualiser.mode.channels=Показывать Каналы
+ae2stuff.visualiser.mode.nonum=Показывать Каналы и Узлы Сети
+ae2stuff.visualiser.mode.p2p=Показывать P2P-Соединения
 
 itemGroup.bdew.ae2stuff=AE2 Stuff
