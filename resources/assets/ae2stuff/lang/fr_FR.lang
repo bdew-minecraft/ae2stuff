@@ -4,6 +4,7 @@ tile.ae2stuff.Inscriber.name=Inscriveur avancé
 tile.ae2stuff.Wireless.name=Connecteur sans-fil
 
 item.ae2stuff.WirelessKit.name=kit de configuration sans-fil
+item.ae2stuff.Visualiser.name=Outils de visualisation du réseau
 
 ae2stuff.error.not_connected=Réseau non connecté
 
@@ -33,5 +34,12 @@ ae2stuff.wireless.tool.security.network=Violation de sécurité - les réseaux n
 ae2stuff.wireless.tool.security.player=Violation de sécurité - vous n'êtes pas autorisé à modifier ce réseau
 
 ae2stuff.visualiser.bound=Visualisation du réseau à %s,%s,%s
+ae2stuff.visualiser.mode=Mode :
+ae2stuff.visualiser.set=Mode changé en %s
+ae2stuff.visualiser.mode.full=Tout afficher
+ae2stuff.visualiser.mode.nodes=Afficher les noeuds
+ae2stuff.visualiser.mode.channels=Afficher les canaux
+ae2stuff.visualiser.mode.nonum=Afficher les cannaux et le noeud
+ae2stuff.visualiser.mode.p2p=Afficher les lien P2P
 
 itemGroup.bdew.ae2stuff=AE2 Stuff
