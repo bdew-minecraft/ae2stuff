@@ -46,9 +46,8 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   })
 
   persistLoad.listen((tag) => {
-    if (node != null)
-      node.destroy()
     if (FMLCommonHandler.instance().getEffectiveSide.isServer) {
+      unRegisterNode()
       node = AEApi.instance().createGridNode(this)
       if (tag.hasKey("ae_node"))
         node.loadFromNBT("ae_node", tag)
@@ -56,13 +55,22 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
     initialized = false
   })
 
-  override def invalidate() {
+  def unRegisterNode(): Unit = {
     if (node != null) {
       node.destroy()
       node = null
       initialized = false
     }
+  }
+
+  override def invalidate(): Unit = {
+    unRegisterNode()
     super.invalidate()
+  }
+
+  override def onChunkUnload(): Unit = {
+    unRegisterNode()
+    super.onChunkUnload()
   }
 
   def getNode = {
