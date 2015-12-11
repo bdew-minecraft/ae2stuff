@@ -12,6 +12,7 @@ package net.bdew.ae2stuff.items
 import java.util
 
 import appeng.api.config.SecurityPermissions
+import appeng.api.exceptions.FailedConnection
 import net.bdew.ae2stuff.grid.Security
 import net.bdew.ae2stuff.machines.wireless.{BlockWireless, TileWireless}
 import net.bdew.ae2stuff.misc.ItemLocationStore
@@ -24,7 +25,7 @@ import net.minecraft.world.World
 
 object ItemWirelessKit extends SimpleItem("WirelessKit") with ItemLocationStore {
   setMaxStackSize(1)
-  
+
   def checkSecurity(t1: TileWireless, t2: TileWireless, p: EntityPlayer) = {
     val pid = Security.getPlayerId(p)
     Security.playerHasPermission(t1.getNode.getGrid, pid, SecurityPermissions.BUILD) &&
@@ -66,18 +67,16 @@ object ItemWirelessKit extends SimpleItem("WirelessKit") with ItemLocationStore 
                   // Make player the owner of both blocks
                   tile.getNode.setPlayerID(pid)
                   other.getNode.setPlayerID(pid)
-
-                  // See if we can connect them
-                  if (Security.canConnect(tile.getNode, other.getNode)) {
-                    // try connecting
+                  try {
                     if (tile.doLink(other)) {
                       player.addChatMessage(L("ae2stuff.wireless.tool.connected", pos.x.toString, pos.y.toString, pos.z.toString).setColor(Color.GREEN))
                     } else {
                       player.addChatMessage(L("ae2stuff.wireless.tool.failed").setColor(Color.RED))
                     }
-                  } else {
-                    // Networks can't be merged (likely because both sides have security terminals)
-                    player.addChatMessage(L("ae2stuff.wireless.tool.security.network").setColor(Color.RED))
+                  } catch {
+                    case e: FailedConnection =>
+                      player.addChatComponentMessage((L("ae2stuff.wireless.tool.failed") & ": " & e.getMessage).setColor(Color.RED))
+                      tile.doUnlink()
                   }
                 }
                 clearLocation(stack)

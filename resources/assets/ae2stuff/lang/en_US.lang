@@ -30,7 +30,6 @@ ae2stuff.wireless.tool.connected=Connected to %s,%s,%s
 ae2stuff.wireless.tool.failed=Connection failed
 ae2stuff.wireless.tool.dimension=Both connectors must be in the same dimension
 ae2stuff.wireless.tool.noexist=Bound connector does not exist
-ae2stuff.wireless.tool.security.network=Security violation - networks can't connect
 ae2stuff.wireless.tool.security.player=Security violation - you are not allowed to modify this network
 
 ae2stuff.visualiser.bound=Visualising network at %s,%s,%s

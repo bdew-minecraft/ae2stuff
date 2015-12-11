@@ -19,17 +19,7 @@ import net.minecraft.entity.player.EntityPlayer
 object Security {
   def getPlayerId(p: GameProfile): Int = WorldData.instance().playerData().getPlayerID(p)
   def getPlayerId(e: EntityPlayer): Int = getPlayerId(e.getGameProfile)
-
-  private lazy val clsGridNode = Class.forName("appeng.me.GridNode")
-  private lazy val mLastSecurityKey = clsGridNode.getMethod("getLastSecurityKey")
-  def getSecurityId(n: IGridNode) = {
-    // Reflection hackery - this is not available via the API
-    if (clsGridNode.isInstance(n)) {
-      mLastSecurityKey.invoke(n).asInstanceOf[Long]
-    } else {
-      sys.error("getSecurityId on something that isn't a GridNode (%s)".format(n.getClass.getName))
-    }
-  }
+  def getPlayerFromId(id: Int): Option[EntityPlayer] = Option(WorldData.instance().playerData().getPlayerFromID(id))
 
   def playerHasPermission(grid: IGrid, playerID: Int, permission: SecurityPermissions): Boolean = {
     if (grid == null) return true
@@ -43,21 +33,5 @@ object Security {
     val gs = n.getGrid.getCache[ISecurityGrid](classOf[ISecurityGrid])
     if (gs == null) return false
     gs.isAvailable
-  }
-
-  def canConnect(node1: IGridNode, node2: IGridNode): Boolean = {
-    if (getSecurityId(node1) == getSecurityId(node2)) return true
-
-    val ns1 = isNodeOnSecureNetwork(node1)
-    val ns2 = isNodeOnSecureNetwork(node2)
-
-    if (ns1 && ns2)
-      false
-    else if (ns1)
-      playerHasPermission(node1.getGrid, node2.getPlayerID, SecurityPermissions.BUILD)
-    else if (ns2)
-      playerHasPermission(node2.getGrid, node1.getPlayerID, SecurityPermissions.BUILD)
-    else
-      true
   }
 }
