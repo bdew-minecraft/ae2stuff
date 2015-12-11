@@ -20,9 +20,15 @@ object Security {
   def getPlayerId(p: GameProfile): Int = WorldData.instance().playerData().getPlayerID(p)
   def getPlayerId(e: EntityPlayer): Int = getPlayerId(e.getGameProfile)
 
+  private lazy val clsGridNode = Class.forName("appeng.me.GridNode")
+  private lazy val mLastSecurityKey = clsGridNode.getMethod("getLastSecurityKey")
   def getSecurityId(n: IGridNode) = {
     // Reflection hackery - this is not available via the API
-    n.getClass.getField("lastSecurityKey").get(n).asInstanceOf[Long]
+    if (clsGridNode.isInstance(n)) {
+      mLastSecurityKey.invoke(n).asInstanceOf[Long]
+    } else {
+      sys.error("getSecurityId on something that isn't a GridNode (%s)".format(n.getClass.getName))
+    }
   }
 
   def playerHasPermission(grid: IGrid, playerID: Int, permission: SecurityPermissions): Boolean = {
