@@ -10,10 +10,10 @@
 package net.bdew.ae2stuff
 
 import java.io.{File, FileWriter}
+import java.util.Optional
 
 import appeng.api.definitions.IItemDefinition
 import appeng.api.util.{AEColor, AEColoredItemDefinition}
-import com.google.common.base.Optional
 import net.bdew.lib.recipes.gencfg.{ConfigSection, GenericConfigLoader, GenericConfigParser}
 import net.bdew.lib.recipes.{RecipeLoader, RecipeParser, RecipesHelper, StackRef}
 import net.minecraft.item.ItemStack

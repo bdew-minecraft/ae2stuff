@@ -10,12 +10,12 @@
 package net.bdew.ae2stuff.machines.grower
 
 import appeng.api.config.Upgrades
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.gui.GuiProvider
 import net.bdew.lib.machine.{Machine, PoweredMachine}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object MachineGrower extends Machine("Grower", BlockGrower) with GuiProvider with PoweredMachine {
   override def guiId = 2

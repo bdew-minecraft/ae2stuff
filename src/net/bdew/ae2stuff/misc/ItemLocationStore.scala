@@ -9,32 +9,22 @@
 
 package net.bdew.ae2stuff.misc
 
-import net.bdew.lib.block.BlockRef
-import net.bdew.lib.nbt.NBT
+import net.bdew.lib.PimpVanilla._
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.math.BlockPos
 
 trait ItemLocationStore extends Item {
-  def hasLocation(stack: ItemStack) =
-    stack.getItem == this && stack.hasTagCompound && stack.getTagCompound.hasKey("loc")
+  def getLocation(stack: ItemStack) = stack.getTagCompound.get[PosAndDimension]("loc")
 
-  def getLocation(stack: ItemStack) =
-    BlockRef.fromNBT(stack.getTagCompound.getCompoundTag("loc"))
-
-  def getDimension(stack: ItemStack) =
-    stack.getTagCompound.getInteger("dim")
-
-  def setLocation(stack: ItemStack, loc: BlockRef, dimension: Int) = {
+  def setLocation(stack: ItemStack, loc: BlockPos, dimension: Int) = {
     if (!stack.hasTagCompound) stack.setTagCompound(new NBTTagCompound)
-    val tag = stack.getTagCompound
-    tag.setTag("loc", NBT.from(loc.writeToNBT _))
-    tag.setInteger("dim", dimension)
+    stack.getTagCompound.set("loc", PosAndDimension(loc, dimension))
   }
 
   def clearLocation(stack: ItemStack) = {
     if (stack.hasTagCompound) {
       stack.getTagCompound.removeTag("loc")
-      stack.getTagCompound.removeTag("dim")
     }
   }
 }

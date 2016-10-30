@@ -15,7 +15,6 @@ import appeng.api.AEApi
 import appeng.api.networking.{GridFlags, IGridConnection}
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.ae2stuff.grid.{GridTile, VariableIdlePower}
-import net.bdew.lib.block.BlockRef
 import net.bdew.lib.data.base.{TileDataSlots, UpdateKind}
 import net.bdew.lib.multiblock.data.DataSlotPos
 import net.minecraft.block.Block
@@ -96,6 +95,6 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
 
   override def getMachineRepresentation: ItemStack = new ItemStack(BlockWireless)
 
-  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int): Boolean =
+  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, pos: BlockPos): Boolean =
     newBlock != BlockWireless
 }

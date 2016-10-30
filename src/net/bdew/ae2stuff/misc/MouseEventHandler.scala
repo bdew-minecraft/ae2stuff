@@ -9,12 +9,12 @@
 
 package net.bdew.ae2stuff.misc
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.bdew.ae2stuff.items.visualiser.{ItemVisualiser, VisualisationModes, VisualiserOverlayRender}
 import net.bdew.ae2stuff.network.{MsgVisualisationMode, NetHandler}
 import net.bdew.lib.{Client, Misc}
 import net.minecraftforge.client.event.MouseEvent
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 object MouseEventHandler {
   def init() {

@@ -13,10 +13,11 @@ import appeng.api.implementations.items.IAEWrench
 import net.bdew.lib.Misc
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraft.util.math.BlockPos
 
 object AEWrenchHandler extends WrenchHandler {
-  override def canWrench(player: EntityPlayer, stack: ItemStack, x: Int, y: Int, z: Int): Boolean =
-    Misc.asInstanceOpt(stack.getItem, classOf[IAEWrench]) exists (_.canWrench(stack, player, x, y, z))
+  override def canWrench(player: EntityPlayer, stack: ItemStack, pos: BlockPos): Boolean =
+    Misc.asInstanceOpt(stack.getItem, classOf[IAEWrench]) exists (_.canWrench(stack, player, pos))
 
-  override def doWrench(player: EntityPlayer, stack: ItemStack, x: Int, y: Int, z: Int): Unit = {}
+  override def doWrench(player: EntityPlayer, stack: ItemStack, pos: BlockPos): Unit = {}
 }

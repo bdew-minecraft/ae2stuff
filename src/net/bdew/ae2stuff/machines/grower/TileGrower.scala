@@ -12,7 +12,6 @@ package net.bdew.ae2stuff.machines.grower
 import appeng.api.config.Upgrades
 import appeng.api.implementations.items.IGrowableCrystal
 import appeng.api.networking.GridNotification
-import cpw.mods.fml.common.registry.GameRegistry
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.{GridTile, PoweredTile}
 import net.bdew.ae2stuff.misc.UpgradeInventory
@@ -24,6 +23,7 @@ import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
+import net.minecraftforge.fml.common.registry.GameRegistry
 
 class TileGrower extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with PoweredTile with TileKeepData {
   override def getSizeInventory = 3 * 9
@@ -39,7 +39,7 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
   val fluixCrystal = AE2Defs.materials.fluixCrystal
 
   serverTick.listen(() => {
-    if (getWorldObj.getTotalWorldTime % MachineGrower.cycleTicks == 0 && isAwake) {
+    if (worldObj.getTotalWorldTime % MachineGrower.cycleTicks == 0 && isAwake) {
       var hadWork = false
       val needPower = MachineGrower.cyclePower * (1 + upgrades.cards(Upgrades.SPEED))
       if (powerStored >= needPower) {
@@ -101,7 +101,7 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
 
   override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = !isItemValidForSlot(slot, stack)
 
-  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int) = oldBlock != newBlock
+  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, pos: BlockPos) = oldBlock != newBlock
   onWake.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3))
   onSleep.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3))
 }

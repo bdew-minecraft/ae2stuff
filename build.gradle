@@ -13,14 +13,20 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = "gradle plugins"
+            url = "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.8"
     }
 }
 
 apply plugin: 'scala'
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.matthewprenger.cursegradle'
 
 file "build.properties" withReader {
     def prop = new Properties()
@@ -45,6 +51,9 @@ archivesBaseName = "ae2stuff"
 
 minecraft {
     version = "${config.minecraft.version}-${config.forge.version}"
+    mappings = "${config.minecraft.mappings}"
+    useDepAts = true
+    makeObfSourceJar = false
     replace("BDLIB_VER", config.bdlib.version)
     replace("AE2STUFF_VER", simpleVersion.toString())
 }
@@ -53,43 +62,30 @@ repositories {
     mavenCentral()
     maven {
         name = "bdew"
-        url = "http://jenkins.bdew.net/maven"
+        url = "https://jenkins.bdew.net/maven"
     }
     maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven"
+        name "JEI"
+        url "http://dvs1.progwml6.com/files/maven"
     }
     maven {
         name "waila"
         url "http://mobiusstrip.eu/maven"
     }
     ivy {
-        name "CoFHLib"
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhlib.cf}/[module]-[revision](-[classifier])(.[ext])"
-    }
-    ivy {
-        name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+        name "AE2"
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.ae2.cf}/[module]-[revision](-[classifier])(.[ext])"
     }
 }
 
 dependencies {
     compile "net.bdew:bdlib:${config.bdlib.version}-mc${config.minecraft.version}:dev"
 
-    compile "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"
-    compile "codechicken:CodeChickenLib:${config.minecraft.version}-${config.ccl.version}:dev"
-    compile "codechicken:CodeChickenCore:${config.minecraft.version}-${config.ccc.version}:dev"
+    deobfCompile "mezz.jei:jei_${config.minecraft.version}:${config.jei.version}"
+    deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
 
-    compile "com.mod-buildcraft:buildcraft:${config.buildcraft.version}:dev"
-    compile ":CoFHLib:${config.cofhlib.version}:dev@jar"
+    deobfCompile ":appliedenergistics2:${config.ae2.version}@jar"
 
-    compile module("mcp.mobius.waila:Waila:${config.waila.version}_${config.minecraft.version}") {
-        transitive = false // WAILA is depending on an invalid combination of CCC/NEI that doesn't run...
-    }
-
-    compile module("appeng:appliedenergistics2:${config.ae2.version}:dev") {
-        transitive = false // AE2 Depends on a lot of crap, some of it not readily available anywhere that i know
-    }
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -118,7 +114,7 @@ processResources {
     }
 }
 
-task sourceJar(type: Jar) {
+task sourceJarReal(type: Jar) {
     classifier "sources"
 }
 
@@ -136,11 +132,11 @@ jar {
 
 afterEvaluate { project ->
     // Fudge the inputs of api/source jars so we get the version after replacements
-    tasks.getByPath(":sourceJar").from(tasks.getByPath(":sourceMainScala").outputs.files)
+    tasks.getByPath(":sourceJarReal").from(tasks.getByPath(":sourceMainScala").outputs.files)
 }
 
 artifacts {
-    archives sourceJar
+    archives sourceJarReal
     archives deobfJar
 }
 
@@ -150,7 +146,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             artifact deobfJar
-            artifact sourceJar
+            artifact sourceJarReal
         }
     }
     repositories {
@@ -160,22 +156,33 @@ publishing {
     }
 }
 
-
-apply plugin: 'curseforge'
-
-curse {
-    projectId = config.curseforge.id
+curseforge {
     apiKey = project.hasProperty("curseForgeApiKey") ? project.curseForgeApiKey : ""
-    releaseType = 'alpha'
+    project {
+        id = config.curseforge.id
 
-    artifact = jar
-    changelog = project.hasProperty("changelog") ? project.changelog : "No changelog available"
+        releaseType = "alpha"
+        changelog = project.hasProperty("changelog") ? project.changelog : "No changelog available"
 
-    additionalArtifact deobfJar
-    additionalArtifact sourceJar
+        addGameVersion config.minecraft.version
 
-    relatedProject 'bdlib': 'requiredLibrary'
-    relatedProject 'applied-energistics-2': 'requiredLibrary'
-    relatedProject 'notenoughitems': 'optionalLibrary'
-    relatedProject 'waila': 'optionalLibrary'
+        mainArtifact(jar) {
+            displayName = "AE2Stuff ${simpleVersion} (MC ${config.minecraft.version})"
+        }
+
+        addArtifact(deobfJar) {
+            displayName = "AE2Stuff ${simpleVersion} Deobfuscated (MC ${config.minecraft.version})"
+        }
+
+        addArtifact(sourceJarReal) {
+            displayName = "AE2Stuff ${simpleVersion} Source (MC ${config.minecraft.version})"
+        }
+
+        relations {
+            requiredLibrary 'bdlib'
+            requiredLibrary 'applied-energistics-2'
+            optionalLibrary 'waila'
+            optionalLibrary 'just-enough-items-jei'
+        }
+    }
 }

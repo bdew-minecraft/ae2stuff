@@ -9,16 +9,17 @@
 
 package net.bdew.ae2stuff.grid
 
+import appeng.api.AEApi
 import appeng.api.config.SecurityPermissions
 import appeng.api.networking.security.ISecurityGrid
 import appeng.api.networking.{IGrid, IGridNode}
-import appeng.core.WorldSettings
 import com.mojang.authlib.GameProfile
 import net.minecraft.entity.player.EntityPlayer
 
 object Security {
-  def getPlayerId(p: GameProfile): Int = WorldSettings.getInstance().getPlayerID(p)
-  def getPlayerId(e: EntityPlayer): Int = getPlayerId(e.getGameProfile)
+  def getPlayerId(p: GameProfile): Int = AEApi.instance().registries().players().getID(p)
+  def getPlayerId(e: EntityPlayer): Int = AEApi.instance().registries().players().getID(e)
+  def getPlayerFromId(id: Int): Option[EntityPlayer] = Option(AEApi.instance().registries().players().findPlayer(id))
 
   def getSecurityId(n: IGridNode) = {
     // Reflection hackery - this is not available via the API

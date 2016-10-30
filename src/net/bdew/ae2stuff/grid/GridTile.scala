@@ -14,18 +14,17 @@ import java.util
 import appeng.api.AEApi
 import appeng.api.networking._
 import appeng.api.networking.events.MENetworkEvent
-import appeng.api.util.{AECableType, AEColor, DimensionalCoord}
-import appeng.core.WorldSettings
+import appeng.api.util.{AECableType, AEColor, AEPartLocation, DimensionalCoord}
 import appeng.me.GridAccessException
-import cpw.mods.fml.common.FMLCommonHandler
 import net.bdew.lib.items.ItemUtils
-import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.BreakableInventoryTile
+import net.bdew.lib.tile.{TileExtended, TileTicking}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraftforge.common.util.ForgeDirection
+import net.minecraft.util.EnumFacing
+import net.minecraftforge.fml.common.FMLCommonHandler
 
-trait GridTile extends TileExtended with IGridHost with IGridBlock {
+trait GridTile extends TileExtended with TileTicking with IGridHost with IGridBlock {
   var node: IGridNode = null
   var initialized = false
 
@@ -34,7 +33,7 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   serverTick.listen(() => {
     if (!initialized) {
       if (placingPlayer != null)
-        getNode.setPlayerID(WorldSettings.getInstance().getPlayerID(placingPlayer.getGameProfile))
+        getNode.setPlayerID(Security.getPlayerId(placingPlayer))
       getNode.updateState()
       initialized = true
     }
@@ -74,7 +73,7 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   }
 
   def getNode = {
-    if (getWorldObj == null || getWorldObj.isRemote) null
+    if (getWorld == null || getWorld.isRemote) null
     else {
       if (node == null)
         node = AEApi.instance().createGridNode(this)
@@ -92,20 +91,20 @@ trait GridTile extends TileExtended with IGridHost with IGridBlock {
   }
 
   // IGridHost
-  override def getGridNode(p1: ForgeDirection) = getNode
-  override def getCableConnectionType(p1: ForgeDirection) = AECableType.COVERED
+  override def getGridNode(aePartLocation: AEPartLocation): IGridNode = getNode
+  override def getCableConnectionType(aePartLocation: AEPartLocation): AECableType = AECableType.COVERED
   override def securityBreak() = {
-    ItemUtils.throwItemAt(getWorldObj, xCoord, yCoord, zCoord, new ItemStack(getBlockType))
+    ItemUtils.throwItemAt(getWorld, pos, new ItemStack(getBlockType))
     if (this.isInstanceOf[BreakableInventoryTile])
       this.asInstanceOf[BreakableInventoryTile].dropItems()
-    getWorldObj.setBlockToAir(xCoord, yCoord, zCoord)
+    worldObj.setBlockToAir(pos)
   }
 
   // IGridBlock
   override def getIdlePowerUsage = 0
   override def getFlags = util.EnumSet.noneOf(classOf[GridFlags])
-  override def getGridColor = AEColor.Transparent
-  override def getConnectableSides = util.EnumSet.allOf(classOf[ForgeDirection])
+  override def getGridColor = AEColor.TRANSPARENT
+  override def getConnectableSides = util.EnumSet.allOf(classOf[EnumFacing])
   override def getMachine = this
   override def isWorldAccessible = true
   override def getLocation = new DimensionalCoord(this)

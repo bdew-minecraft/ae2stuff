@@ -9,58 +9,40 @@
 
 package net.bdew.ae2stuff.machines.encoder
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.ae2stuff.misc.{BlockWrenchable, MachineMaterial}
-import net.bdew.lib.Misc
-import net.bdew.lib.block.{BlockKeepData, HasTE, SimpleBlock}
-import net.bdew.lib.rotate.{IconType, RotatableTileBlock}
-import net.minecraft.client.renderer.texture.IIconRegister
+import net.bdew.lib.block.{BaseBlock, BlockKeepData, HasTE}
+import net.bdew.lib.rotate.RotatableTileBlock
+import net.minecraft.block.properties.PropertyBool
+import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.util.{ChatComponentTranslation, ChatStyle, EnumChatFormatting, IIcon}
+import net.minecraft.util._
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-object BlockEncoder extends SimpleBlock("Encoder", MachineMaterial) with HasTE[TileEncoder] with RotatableTileBlock with BlockWrenchable with BlockKeepData {
+object BlockEncoder extends BaseBlock("Encoder", MachineMaterial) with HasTE[TileEncoder] with BlockWrenchable with RotatableTileBlock with BlockKeepData {
+  lazy val ACTIVE = PropertyBool.create("active")
+
   override val TEClass = classOf[TileEncoder]
+  override def getProperties = List(ACTIVE)
 
   setHardness(1)
 
-  var topIconOn: IIcon = null
-  var topIconOff: IIcon = null
-
-  override def getIcon(meta: Int, kind: IconType.Value): IIcon =
-    if (kind == IconType.FRONT)
-      if (meta == 1)
-        topIconOn
-      else
-        topIconOff
-    else
-      blockIcon
-
-  @SideOnly(Side.CLIENT)
-  override def registerBlockIcons(reg: IIconRegister) {
-    blockIcon = reg.registerIcon(Misc.iconName(modId, name, "side"))
-    topIconOn = reg.registerIcon(Misc.iconName(modId, name, "top_on"))
-    topIconOff = reg.registerIcon(Misc.iconName(modId, name, "top_off"))
-  }
-
-  override def onBlockActivatedReal(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, xOffs: Float, yOffs: Float, zOffs: Float): Boolean = {
-    if (getTE(world, x, y, z).getNode.isActive) {
-      player.openGui(AE2Stuff, MachineEncoder.guiId, world, x, y, z)
+  override def onBlockActivatedReal(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, heldItem: ItemStack, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
+    if (getTE(world, pos).getNode.isActive) {
+      player.openGui(AE2Stuff, MachineEncoder.guiId, world, pos.getX, pos.getY, pos.getZ)
     } else {
-      player.addChatMessage(
-        new ChatComponentTranslation("ae2stuff.error.not_connected")
-          .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))
-      )
+      import net.bdew.lib.helpers.ChatHelper._
+      player.addChatMessage(L("ae2stuff.error.not_connected").setColor(Color.RED))
     }
     true
   }
 
-  override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, player: EntityLivingBase, stack: ItemStack) {
-    super.onBlockPlacedBy(world, x, y, z, player, stack)
-    if (player.isInstanceOf[EntityPlayer])
-      getTE(world, x, y, z).placingPlayer = player.asInstanceOf[EntityPlayer]
+  override def onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack): Unit = {
+    super.onBlockPlacedBy(world, pos, state, placer, stack)
+    if (placer.isInstanceOf[EntityPlayer])
+      getTE(world, pos).placingPlayer = placer.asInstanceOf[EntityPlayer]
   }
 }

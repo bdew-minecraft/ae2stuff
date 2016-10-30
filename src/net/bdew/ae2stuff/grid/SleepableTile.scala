@@ -11,18 +11,18 @@ package net.bdew.ae2stuff.grid
 
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.Event
-import net.bdew.lib.tile.TileExtended
+import net.bdew.lib.tile.{TileExtended, TileTicking}
 
 import scala.util.Random
 
-trait SleepableTile extends TileExtended {
+trait SleepableTile extends TileExtended with TileTicking {
   private final val TRACE = false
   private var sleeping = false
   private val forceWakeupOn = Random.nextInt(100)
 
   serverTick.listen(() => {
     // This should prevent tiles from getting stuck sleeping forever
-    if (getWorldObj.getTotalWorldTime % 100 == forceWakeupOn)
+    if (getWorld.getTotalWorldTime % 100 == forceWakeupOn)
       wakeup()
   })
 
@@ -34,13 +34,13 @@ trait SleepableTile extends TileExtended {
   def isSleeping = sleeping
 
   def sleep(): Unit = {
-    if (TRACE && !sleeping) AE2Stuff.logInfo("SLEEP %s (%d,%d,%d)", getClass.getSimpleName, xCoord, yCoord, zCoord)
+    if (TRACE && !sleeping) AE2Stuff.logInfo("SLEEP %s (%s)", getClass.getSimpleName, pos)
     if (!sleeping) onSleep.trigger()
     sleeping = true
   }
 
   def wakeup(): Unit = {
-    if (TRACE && sleeping) AE2Stuff.logInfo("WAKEUP %s (%d,%d,%d)", getClass.getSimpleName, xCoord, yCoord, zCoord)
+    if (TRACE && sleeping) AE2Stuff.logInfo("WAKEUP %s (%s)", getClass.getSimpleName, pos)
     if (sleeping) onWake.trigger()
     sleeping = false
   }

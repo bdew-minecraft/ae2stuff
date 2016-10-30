@@ -12,7 +12,7 @@ package net.bdew.ae2stuff.machines.encoder
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.lib.gui.{BaseContainer, SlotValidating}
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.InventoryCrafting
+import net.minecraft.inventory.{ClickType, InventoryCrafting}
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.CraftingManager
 
@@ -32,15 +32,15 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
     val c = new InventoryCrafting(this, 3, 3)
     for (i <- 0 until 9)
       c.setInventorySlotContents(i, te.getStackInSlot(te.slots.recipe(i)))
-    val r = CraftingManager.getInstance.findMatchingRecipe(c, te.getWorldObj)
+    val r = CraftingManager.getInstance.findMatchingRecipe(c, te.getWorld)
     te.setInventorySlotContents(te.slots.result, r)
   }
 
-  override def slotClick(slotNum: Int, button: Int, modifiers: Int, player: EntityPlayer): ItemStack = {
+  override def slotClick(slotNum: Int, button: Int, clickType: ClickType, player: EntityPlayer): ItemStack = {
     import scala.collection.JavaConversions._
     if (inventorySlots.isDefinedAt(slotNum)) {
       val slot = getSlot(slotNum)
-      if (slot == patternSlot && button == 0 && modifiers == 0) {
+      if (slot == patternSlot && button == 0 && clickType == ClickType.PICKUP) {
         val playerStack = player.inventory.getItemStack
         val slotStack = slot.getStack
         if (AE2Defs.items.encodedPattern().isSameAs(playerStack)) {
@@ -65,7 +65,7 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
     // preventing updates to OTHER slots from being detected and sent back
     // Here i ensure changes are sent back before returning so NetHandlerPlayServer.processClickWindow doesn't
     // get the opportunity to mess things up
-    val r = super.slotClick(slotNum, button, modifiers, player)
+    val r = super.slotClick(slotNum, button, clickType, player)
     detectAndSendChanges()
     r
   }
@@ -91,7 +91,7 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
 
   override def detectAndSendChanges() {
     super.detectAndSendChanges()
-    if (!te.getWorldObj.isRemote) {
+    if (!te.getWorld.isRemote) {
       if (!te.getNode.isActive) {
         player.closeScreen()
       }

@@ -9,36 +9,36 @@
 
 package net.bdew.ae2stuff.items.visualiser
 
-import cpw.mods.fml.common.FMLCommonHandler
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import cpw.mods.fml.common.gameevent.PlayerEvent.{PlayerChangedDimensionEvent, PlayerLoggedOutEvent, PlayerRespawnEvent}
-import net.bdew.lib.block.BlockRef
+import net.bdew.ae2stuff.misc.PosAndDimension
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.{PlayerChangedDimensionEvent, PlayerLoggedOutEvent, PlayerRespawnEvent}
 
 import scala.collection.mutable
 
 object VisualiserPlayerTracker {
 
-  case class Entry(pos: BlockRef, dim: Int, last: Long)
+  case class Entry(loc: PosAndDimension, last: Long)
 
   var map = mutable.Map.empty[EntityPlayer, Entry]
 
   def init() {
-    FMLCommonHandler.instance().bus().register(this)
+    MinecraftForge.EVENT_BUS.register(this)
   }
 
   def clear() = map.clear()
 
-  def needToUpdate(player: EntityPlayer, pos: BlockRef, dim: Int): Boolean = {
+  def needToUpdate(player: EntityPlayer, loc: PosAndDimension): Boolean = {
     if (map.isDefinedAt(player)) {
       val last = map(player)
       val now = player.worldObj.getTotalWorldTime
-      if (last.pos != pos || last.dim != dim || last.last < now - 100) {
-        map += player -> Entry(pos, dim, player.worldObj.getTotalWorldTime)
+      if (last.loc != loc || last.last < now - 100) {
+        map += player -> Entry(loc, player.worldObj.getTotalWorldTime)
         true
       } else false
     } else {
-      map += player -> Entry(pos, dim, player.worldObj.getTotalWorldTime)
+      map += player -> Entry(loc, player.worldObj.getTotalWorldTime)
       true
     }
   }

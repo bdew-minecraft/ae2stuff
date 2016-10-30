@@ -15,11 +15,10 @@ import net.bdew.lib.{DecFormat, Misc}
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.EnumChatFormatting
 import net.minecraft.world.World
 
 object WailaPoweredDataProvider extends BaseDataProvider(classOf[PoweredTile]) {
-  override def getNBTTag(player: EntityPlayerMP, te: PoweredTile, tag: NBTTagCompound, world: World, x: Int, y: Int, z: Int): NBTTagCompound = {
+  override def getNBTTag(player: EntityPlayerMP, te: PoweredTile, tag: NBTTagCompound, world: World, pos: BlockPos): NBTTagCompound = {
     tag.setDouble("waila_power_stored", te.powerStored)
     tag.setDouble("waila_power_capacity", te.powerCapacity)
     tag.setBoolean("waila_power_sleep", te.isSleeping)

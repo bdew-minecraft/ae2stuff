@@ -11,7 +11,6 @@ package net.bdew.ae2stuff.waila
 
 import mcp.mobius.waila.api.{IWailaConfigHandler, IWailaDataAccessor}
 import net.bdew.ae2stuff.machines.wireless.TileWireless
-import net.bdew.lib.block.BlockRef
 import net.bdew.lib.nbt.NBT
 import net.bdew.lib.{DecFormat, Misc}
 import net.minecraft.entity.player.EntityPlayerMP
@@ -20,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 
 object WailaWirelessDataProvider extends BaseDataProvider(classOf[TileWireless]) {
-  override def getNBTTag(player: EntityPlayerMP, te: TileWireless, tag: NBTTagCompound, world: World, x: Int, y: Int, z: Int): NBTTagCompound = {
+  override def getNBTTag(player: EntityPlayerMP, te: TileWireless, tag: NBTTagCompound, world: World, pos: BlockPos): NBTTagCompound = {
     if (te.isLinked) {
       val pos = te.link map (link => NBT.from(link.writeToNBT _)) getOrElse new NBTTagCompound
       tag.setTag("wireless_waila", NBT(

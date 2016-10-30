@@ -17,7 +17,7 @@ import net.bdew.ae2stuff.grid.{GridTile, PoweredTile}
 import net.bdew.ae2stuff.misc.UpgradeInventory
 import net.bdew.lib.block.TileKeepData
 import net.bdew.lib.data.base.{TileDataSlots, UpdateKind}
-import net.bdew.lib.data.{DataSlotBoolean, DataSlotFloat, DataSlotItemStack}
+import net.bdew.lib.data.{DataSlotBoolean, DataSlotFloat}
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
 import net.minecraft.block.Block
@@ -165,7 +165,7 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
     case _ => false
   }
 
-  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int) = oldBlock != newBlock
+  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, pos: BlockPos) = oldBlock != newBlock
   onWake.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3))
   onSleep.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3))
 }

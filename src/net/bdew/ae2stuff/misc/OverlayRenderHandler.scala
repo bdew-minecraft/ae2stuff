@@ -9,13 +9,13 @@
 
 package net.bdew.ae2stuff.misc
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.Client
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.lwjgl.opengl.GL11
 
 trait WorldOverlayRenderer {
@@ -58,7 +58,7 @@ object OverlayRenderHandler {
     val scale = 0.027F
     GL11.glColor4f(1f, 1f, 1f, 0.5f)
     GL11.glPushMatrix()
-    GL11.glTranslated(x, y, z)
+    GL11.glTranslated(pos)
     GL11.glNormal3f(0.0F, 1.0F, 0.0F)
     GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F)
     GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F)

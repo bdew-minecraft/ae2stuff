@@ -16,14 +16,17 @@ import appeng.api.networking.storage.IStorageGrid
 import appeng.util.item.AEItemStack
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.GridTile
+import net.bdew.lib.PimpVanilla._
 import net.bdew.lib.block.TileKeepData
 import net.bdew.lib.nbt.NBT
 import net.bdew.lib.rotate.RotatableTile
 import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
-import net.minecraft.block.Block
+import net.minecraft.block.state.IBlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.EnumFacing
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.oredict.OreDictionary
 
@@ -106,8 +109,8 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
   // Inventory stuff
 
   allowSided = true
-  override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = false
-  override def getAccessibleSlotsFromSide(side: Int) = Array(slots.patterns)
+  override def canExtractItem(slot: Int, stack: ItemStack, side: EnumFacing) = false
+  override def getSlotsForFace(side: EnumFacing): Array[Int] = Array(slots.patterns)
   override def isItemValidForSlot(slot: Int, stack: ItemStack) =
     slot == slots.patterns && blankPattern.isSameAs(stack)
 
@@ -116,11 +119,10 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
 
   @MENetworkEventSubscribe
   def networkPowerStatusChange(ev: MENetworkPowerStatusChange): Unit = {
-    val newMeta = if (node.isActive) 1 else 0
-    if (newMeta != worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) {
-      worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newMeta, 3)
-    }
+    val currentState = worldObj.getBlockState(pos)
+    if (currentState.getValue(BlockEncoder.ACTIVE) != node.isActive)
+      worldObj.setBlockState(pos, currentState.withProperty(BlockEncoder.ACTIVE, Boolean.box(node.isActive)), 3)
   }
 
-  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int) = oldBlock != newBlock
+  override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockEncoder
 }

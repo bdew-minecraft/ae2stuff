@@ -9,13 +9,13 @@
 
 package net.bdew.ae2stuff.compat
 
-import net.bdew.lib.Misc
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraft.util.math.BlockPos
 
 trait WrenchHandler {
-  def canWrench(player: EntityPlayer, stack: ItemStack, x: Int, y: Int, z: Int): Boolean
-  def doWrench(player: EntityPlayer, stack: ItemStack, x: Int, y: Int, z: Int): Unit
+  def canWrench(player: EntityPlayer, stack: ItemStack, pos: BlockPos): Boolean
+  def doWrench(player: EntityPlayer, stack: ItemStack, pos: BlockPos): Unit
 }
 
 object WrenchRegistry {
@@ -23,10 +23,8 @@ object WrenchRegistry {
 
   def init(): Unit = {
     registry :+= AEWrenchHandler
-    if (Misc.haveModVersion("BuildCraftAPI|tools"))
-      registry :+= BCWrenchHandler
   }
 
-  def findWrench(player: EntityPlayer, stack: ItemStack, x: Int, y: Int, z: Int) =
-    registry.find(_.canWrench(player, stack, x, y, z))
+  def findWrench(player: EntityPlayer, stack: ItemStack, pos: BlockPos) =
+    registry.find(_.canWrench(player, stack, pos))
 }

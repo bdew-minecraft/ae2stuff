@@ -10,7 +10,6 @@
 package net.bdew.ae2stuff.machines.inscriber
 
 import appeng.api.config.Upgrades
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.ae2stuff.network.{MsgSetLock, NetHandler}
 import net.bdew.lib.Misc
@@ -18,6 +17,7 @@ import net.bdew.lib.gui.GuiProvider
 import net.bdew.lib.machine.Machine
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object MachineInscriber extends Machine("Inscriber", BlockInscriber) with GuiProvider {
   override def guiId = 3

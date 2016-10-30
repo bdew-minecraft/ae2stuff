@@ -11,11 +11,6 @@ package net.bdew.ae2stuff
 
 import java.io.File
 
-import cpw.mods.fml.common.Mod
-import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event._
-import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.relauncher.Side
 import net.bdew.ae2stuff.compat.WrenchRegistry
 import net.bdew.ae2stuff.items.visualiser.{VisualiserOverlayRender, VisualiserPlayerTracker}
 import net.bdew.ae2stuff.machines.wireless.WirelessOverlayRender
@@ -23,6 +18,11 @@ import net.bdew.ae2stuff.misc.{Icons, MouseEventHandler, OverlayRenderHandler}
 import net.bdew.ae2stuff.network.NetHandler
 import net.bdew.lib.Event
 import net.bdew.lib.gui.GuiHandler
+import net.minecraftforge.fml.common.Mod
+import net.minecraftforge.fml.common.Mod.EventHandler
+import net.minecraftforge.fml.common.event._
+import net.minecraftforge.fml.common.network.NetworkRegistry
+import net.minecraftforge.fml.relauncher.Side
 import org.apache.logging.log4j.Logger
 
 @Mod(modid = AE2Stuff.modId, version = "AE2STUFF_VER", name = "AE2 Stuff", dependencies = "required-after:appliedenergistics2;required-after:bdlib@[BDLIB_VER,)", modLanguage = "scala")

@@ -13,9 +13,11 @@ import net.bdew.ae2stuff.machines.encoder.MachineEncoder
 import net.bdew.ae2stuff.machines.grower.MachineGrower
 import net.bdew.ae2stuff.machines.inscriber.MachineInscriber
 import net.bdew.ae2stuff.machines.wireless.MachineWireless
-import net.bdew.lib.config.MachineManager
+import net.bdew.lib.config.{BlockManager, MachineManager}
 
-object Machines extends MachineManager(Tuning.getSection("Machines"), AE2Stuff.guiHandler, CreativeTabs.main) {
+object Blocks extends BlockManager(CreativeTabs.main)
+
+object Machines extends MachineManager(Tuning.getSection("Machines"), AE2Stuff.guiHandler, Blocks) {
   registerMachine(MachineEncoder)
   registerMachine(MachineGrower)
   registerMachine(MachineInscriber)
