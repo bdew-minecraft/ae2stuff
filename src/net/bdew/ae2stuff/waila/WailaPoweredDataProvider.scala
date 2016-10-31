@@ -15,6 +15,8 @@ import net.bdew.lib.{DecFormat, Misc}
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.text.TextFormatting
 import net.minecraft.world.World
 
 object WailaPoweredDataProvider extends BaseDataProvider(classOf[PoweredTile]) {
@@ -31,9 +33,9 @@ object WailaPoweredDataProvider extends BaseDataProvider(classOf[PoweredTile]) {
       List(
         Misc.toLocalF("ae2stuff.waila.power", DecFormat.short(nbt.getDouble("waila_power_stored")), DecFormat.short(nbt.getDouble("waila_power_capacity"))),
         if (nbt.getBoolean("waila_power_sleep"))
-          EnumChatFormatting.RED + Misc.toLocal("ae2stuff.waila.sleep.true") + EnumChatFormatting.RESET
+          TextFormatting.RED + Misc.toLocal("ae2stuff.waila.sleep.true") + TextFormatting.RESET
         else
-          EnumChatFormatting.GREEN + Misc.toLocal("ae2stuff.waila.sleep.false") + EnumChatFormatting.RESET
+          TextFormatting.GREEN + Misc.toLocal("ae2stuff.waila.sleep.false") + TextFormatting.RESET
       )
     } else List.empty
   }

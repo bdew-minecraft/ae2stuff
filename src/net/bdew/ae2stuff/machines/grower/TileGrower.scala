@@ -19,11 +19,13 @@ import net.bdew.lib.block.TileKeepData
 import net.bdew.lib.data.base.TileDataSlots
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
-import net.minecraft.block.Block
+import net.minecraft.block.state.IBlockState
+import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.EnumFacing
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.fml.common.registry.GameRegistry
 
 class TileGrower extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with PoweredTile with TileKeepData {
   override def getSizeInventory = 3 * 9
@@ -32,8 +34,8 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
 
   val upgrades = new UpgradeInventory("upgrades", this, 3, Set(Upgrades.SPEED))
 
-  val redstoneDust = GameRegistry.findItem("minecraft", "redstone")
-  val netherQuartz = GameRegistry.findItem("minecraft", "quartz")
+  val redstoneDust = Items.REDSTONE
+  val netherQuartz = Items.QUARTZ
   val crystal = AE2Defs.items.crystalSeed.maybeItem().get().asInstanceOf[IGrowableCrystal]
   val chargedCertusQuartz = AE2Defs.materials.certusQuartzCrystalCharged()
   val fluixCrystal = AE2Defs.materials.fluixCrystal
@@ -99,9 +101,10 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
         || chargedCertusQuartz.isSameAs(stack)
       )
 
-  override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = !isItemValidForSlot(slot, stack)
+  override def canExtractItem(slot: Int, stack: ItemStack, side: EnumFacing) = !isItemValidForSlot(slot, stack)
 
-  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, pos: BlockPos) = oldBlock != newBlock
-  onWake.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3))
-  onSleep.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3))
+  override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockGrower
+
+  onWake.listen(() => BlockGrower.setActive(worldObj, pos, true))
+  onSleep.listen(() => BlockGrower.setActive(worldObj, pos, false))
 }

@@ -19,7 +19,7 @@ import net.bdew.lib.data.base.{TileDataSlots, UpdateKind}
 trait PoweredTile extends TileDataSlots with GridTile with SleepableTile with IAEPowerStorage {
   def powerCapacity: Double
 
-  val powerStored = new DataSlotDouble("power", this).setUpdate(UpdateKind.SAVE)
+  val powerStored = DataSlotDouble("power", this).setUpdate(UpdateKind.SAVE)
 
   private var postedReq = false
 

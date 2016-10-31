@@ -14,7 +14,7 @@ import appeng.api.implementations.items.IUpgradeModule
 import net.bdew.lib.gui.{BaseContainer, SlotValidating}
 import net.bdew.lib.items.ItemUtils
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.{IInventory, Slot}
+import net.minecraft.inventory.{ClickType, IInventory, Slot}
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 
@@ -61,13 +61,13 @@ trait ContainerUpgradeable extends BaseContainer {
     null
   }
 
-  override def slotClick(slotNum: Int, button: Int, modifiers: Int, player: EntityPlayer): ItemStack = {
+  override def slotClick(slotNum: Int, button: Int, clickType: ClickType, player: EntityPlayer): ItemStack = {
     if (slotNum > 0 && slotNum < inventorySlots.size() && netToolSlot.isDefined) {
       val slot = getSlot(slotNum)
-      if (slot.isSlotInInventory(player.inventory, netToolSlot.get))
+      if (slot.isHere(player.inventory, netToolSlot.get))
         return null
     }
-    if (modifiers == 2 && netToolSlot.contains(button)) return null
-    super.slotClick(slotNum, button, modifiers, player)
+    if (clickType == ClickType.SWAP && netToolSlot.contains(button)) return null
+    super.slotClick(slotNum, button, clickType, player)
   }
 }

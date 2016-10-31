@@ -15,7 +15,11 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 
 trait ItemLocationStore extends Item {
-  def getLocation(stack: ItemStack) = stack.getTagCompound.get[PosAndDimension]("loc")
+  def getLocation(stack: ItemStack) =
+    if (stack.hasTagCompound)
+      stack.getTagCompound.get[PosAndDimension]("loc")
+    else
+      None
 
   def setLocation(stack: ItemStack, loc: BlockPos, dimension: Int) = {
     if (!stack.hasTagCompound) stack.setTagCompound(new NBTTagCompound)

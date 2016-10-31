@@ -22,6 +22,7 @@ import net.bdew.lib.helpers.ChatHelper._
 import net.bdew.lib.items.BaseItem
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
+import net.minecraft.inventory.EntityEquipmentSlot
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
@@ -64,10 +65,19 @@ object ItemVisualiser extends BaseItem("Visualiser") with ItemLocationStore {
   }
 
   override def onUpdate(stack: ItemStack, world: World, entity: Entity, slot: Int, active: Boolean): Unit = {
-    if (!active || world.isRemote || !entity.isInstanceOf[EntityPlayerMP]) return
+    if (world.isRemote || !entity.isInstanceOf[EntityPlayerMP]) return
 
     val player = entity.asInstanceOf[EntityPlayerMP]
-    val stack = player.inventory.getCurrentItem
+
+    val main = player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND)
+    val off = player.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND)
+
+    val stack =
+      if (main != null && main.getItem == this)
+        main
+      else if (off != null && off.getItem == this)
+        off
+      else return
 
     for {
       boundLoc <- getLocation(stack) if (boundLoc.dim == world.provider.getDimension) && VisualiserPlayerTracker.needToUpdate(player, boundLoc)

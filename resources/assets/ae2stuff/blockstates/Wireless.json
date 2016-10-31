@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "top": "ae2stuff:blocks/wireless/top_off",
+      "bottom": "ae2stuff:blocks/wireless/top_off",
+      "side": "ae2stuff:blocks/wireless/side_off"
+    },
+    "model": "minecraft:cube_bottom_top"
+  },
+  "variants": {
+    "active": {
+      "true": {
+        "textures": {
+          "top": "ae2stuff:blocks/wireless/top_on",
+          "bottom": "ae2stuff:blocks/wireless/top_on",
+          "side": "ae2stuff:blocks/wireless/side_on"
+        }
+      },
+      "false": {}
+    },
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

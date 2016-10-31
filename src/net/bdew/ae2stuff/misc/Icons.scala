@@ -11,7 +11,7 @@ package net.bdew.ae2stuff.misc
 
 import net.bdew.lib.render.IconPreloader
 
-object Icons extends IconPreloader(0) {
+object Icons extends IconPreloader {
   val lockOn = TextureLoc("ae2stuff:icons/lock/on")
   val lockOff = TextureLoc("ae2stuff:icons/lock/off")
 }

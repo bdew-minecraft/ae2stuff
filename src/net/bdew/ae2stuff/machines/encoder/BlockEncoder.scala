@@ -10,10 +10,9 @@
 package net.bdew.ae2stuff.machines.encoder
 
 import net.bdew.ae2stuff.AE2Stuff
-import net.bdew.ae2stuff.misc.{BlockWrenchable, MachineMaterial}
+import net.bdew.ae2stuff.misc.{BlockActiveTexture, BlockWrenchable, MachineMaterial}
 import net.bdew.lib.block.{BaseBlock, BlockKeepData, HasTE}
-import net.bdew.lib.rotate.RotatableTileBlock
-import net.minecraft.block.properties.PropertyBool
+import net.bdew.lib.rotate.{BlockFacingMeta, Properties}
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -22,13 +21,19 @@ import net.minecraft.util._
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-object BlockEncoder extends BaseBlock("Encoder", MachineMaterial) with HasTE[TileEncoder] with BlockWrenchable with RotatableTileBlock with BlockKeepData {
-  lazy val ACTIVE = PropertyBool.create("active")
-
+object BlockEncoder extends BaseBlock("Encoder", MachineMaterial) with HasTE[TileEncoder] with BlockWrenchable with BlockFacingMeta with BlockKeepData with BlockActiveTexture {
   override val TEClass = classOf[TileEncoder]
-  override def getProperties = List(ACTIVE)
 
   setHardness(1)
+
+  override def getStateFromMeta(meta: Int) =
+    getDefaultState
+      .withProperty(Properties.FACING, EnumFacing.getFront(meta & 7))
+      .withProperty(BlockActiveTexture.Active, Boolean.box((meta & 8) > 0))
+
+  override def getMetaFromState(state: IBlockState) = {
+    state.getValue(Properties.FACING).ordinal() | (if (state.getValue(BlockActiveTexture.Active)) 8 else 0)
+  }
 
   override def onBlockActivatedReal(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, heldItem: ItemStack, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
     if (getTE(world, pos).getNode.isActive) {

@@ -9,7 +9,7 @@
 
 package net.bdew.ae2stuff.machines.wireless
 
-import net.bdew.ae2stuff.misc.{BlockWrenchable, MachineMaterial}
+import net.bdew.ae2stuff.misc.{BlockActiveTexture, BlockWrenchable, MachineMaterial}
 import net.bdew.lib.block.{BaseBlock, HasTE}
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
-object BlockWireless extends BaseBlock("Wireless", MachineMaterial) with HasTE[TileWireless] with BlockWrenchable {
+object BlockWireless extends BaseBlock("Wireless", MachineMaterial) with HasTE[TileWireless] with BlockWrenchable with BlockActiveTexture {
   override val TEClass = classOf[TileWireless]
 
   setHardness(1)

@@ -94,10 +94,10 @@ trait GridTile extends TileExtended with TileTicking with IGridHost with IGridBl
   override def getGridNode(aePartLocation: AEPartLocation): IGridNode = getNode
   override def getCableConnectionType(aePartLocation: AEPartLocation): AECableType = AECableType.COVERED
   override def securityBreak() = {
-    ItemUtils.throwItemAt(getWorld, pos, new ItemStack(getBlockType))
+    ItemUtils.throwItemAt(getWorld, getPos, new ItemStack(getBlockType))
     if (this.isInstanceOf[BreakableInventoryTile])
       this.asInstanceOf[BreakableInventoryTile].dropItems()
-    worldObj.setBlockToAir(pos)
+    getWorld.setBlockToAir(getPos)
   }
 
   // IGridBlock

@@ -21,8 +21,7 @@ object UpgradeableHelper {
   def isNetworkTool(is: ItemStack) = networkTool.isSameAs(is)
 
   def getNetworkToolObj(is: ItemStack, te: TileEntity) =
-    networkTool.maybeItem().get().asInstanceOf[IGuiItem]
-      .getGuiObject(is, te.getWorldObj, te.xCoord, te.yCoord, te.zCoord).asInstanceOf[INetworkTool]
+    networkTool.maybeItem().get().asInstanceOf[IGuiItem].getGuiObject(is, te.getWorld, te.getPos).asInstanceOf[INetworkTool]
 
   def findNetworktoolStack(player: EntityPlayer) = (for {
     i <- 0 until player.inventory.getSizeInventory

@@ -34,13 +34,13 @@ trait SleepableTile extends TileExtended with TileTicking {
   def isSleeping = sleeping
 
   def sleep(): Unit = {
-    if (TRACE && !sleeping) AE2Stuff.logInfo("SLEEP %s (%s)", getClass.getSimpleName, pos)
+    if (TRACE && !sleeping) AE2Stuff.logInfo("SLEEP %s (%s)", getClass.getSimpleName, getPos)
     if (!sleeping) onSleep.trigger()
     sleeping = true
   }
 
   def wakeup(): Unit = {
-    if (TRACE && sleeping) AE2Stuff.logInfo("WAKEUP %s (%s)", getClass.getSimpleName, pos)
+    if (TRACE && sleeping) AE2Stuff.logInfo("WAKEUP %s (%s)", getClass.getSimpleName, getPos)
     if (sleeping) onWake.trigger()
     sleeping = false
   }

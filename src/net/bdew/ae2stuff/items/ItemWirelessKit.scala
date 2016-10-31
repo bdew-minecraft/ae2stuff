@@ -12,6 +12,7 @@ package net.bdew.ae2stuff.items
 import java.util
 
 import appeng.api.config.SecurityPermissions
+import appeng.api.exceptions.FailedConnection
 import net.bdew.ae2stuff.grid.Security
 import net.bdew.ae2stuff.machines.wireless.{BlockWireless, TileWireless}
 import net.bdew.ae2stuff.misc.ItemLocationStore
@@ -21,6 +22,7 @@ import net.bdew.lib.items.BaseItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.{EnumActionResult, EnumFacing, EnumHand}
 import net.minecraft.world.World
 
 object ItemWirelessKit extends BaseItem("WirelessKit") with ItemLocationStore {
@@ -32,9 +34,9 @@ object ItemWirelessKit extends BaseItem("WirelessKit") with ItemLocationStore {
       Security.playerHasPermission(t2.getNode.getGrid, pid, SecurityPermissions.BUILD)
   }
 
-  override def onItemUse(stack: ItemStack, player: EntityPlayer, world: World, pos: BlockPos, side: Int, xOff: Float, yOff: Float, zOff: Float): Boolean = {
+  override def onItemUse(stack: ItemStack, player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult = {
     import net.bdew.lib.helpers.ChatHelper._
-    if (world.getBlockState(pos).getBlock != BlockWireless) return false
+    if (world.getBlockState(pos).getBlock != BlockWireless) return EnumActionResult.PASS
     if (!world.isRemote) {
       world.getTileSafe[TileWireless](pos) foreach { tile =>
         val pid = Security.getPlayerId(player)
@@ -66,18 +68,16 @@ object ItemWirelessKit extends BaseItem("WirelessKit") with ItemLocationStore {
                       // Make player the owner of both blocks
                       tile.getNode.setPlayerID(pid)
                       other.getNode.setPlayerID(pid)
-
-                      // See if we can connect them
-                      if (Security.canConnect(tile.getNode, other.getNode)) {
-                        // try connecting
+                      try {
                         if (tile.doLink(other)) {
                           player.addChatMessage(L("ae2stuff.wireless.tool.connected", pos.getX.toString, pos.getY.toString, pos.getZ.toString).setColor(Color.GREEN))
                         } else {
                           player.addChatMessage(L("ae2stuff.wireless.tool.failed").setColor(Color.RED))
                         }
-                      } else {
-                        // Networks can't be merged (likely because both sides have security terminals)
-                        player.addChatMessage(L("ae2stuff.wireless.tool.security.network").setColor(Color.RED))
+                      } catch {
+                        case e: FailedConnection =>
+                          player.addChatComponentMessage((L("ae2stuff.wireless.tool.failed") & ": " & e.getMessage).setColor(Color.RED))
+                          tile.doUnlink()
                       }
                     }
                     clearLocation(stack)
@@ -95,7 +95,7 @@ object ItemWirelessKit extends BaseItem("WirelessKit") with ItemLocationStore {
         }
       }
     }
-    true
+    EnumActionResult.SUCCESS
   }
 
   override def addInformation(stack: ItemStack, playerIn: EntityPlayer, tooltip: util.List[String], advanced: Boolean): Unit = {

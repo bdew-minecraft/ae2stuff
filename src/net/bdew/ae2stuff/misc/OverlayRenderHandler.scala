@@ -12,7 +12,7 @@ package net.bdew.ae2stuff.misc
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.lib.Client
 import net.minecraft.client.renderer.Tessellator
-import net.minecraft.client.renderer.entity.RenderManager
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -31,16 +31,16 @@ object OverlayRenderHandler {
   @SubscribeEvent
   def onRenderWorldLastEvent(ev: RenderWorldLastEvent): Unit = {
     val p = Client.player
-    val dx = p.lastTickPosX + (p.posX - p.lastTickPosX) * ev.partialTicks
-    val dy = p.lastTickPosY + (p.posY - p.lastTickPosY) * ev.partialTicks
-    val dz = p.lastTickPosZ + (p.posZ - p.lastTickPosZ) * ev.partialTicks
+    val dx = p.lastTickPosX + (p.posX - p.lastTickPosX) * ev.getPartialTicks
+    val dy = p.lastTickPosY + (p.posY - p.lastTickPosY) * ev.getPartialTicks
+    val dz = p.lastTickPosZ + (p.posZ - p.lastTickPosZ) * ev.getPartialTicks
 
     GL11.glPushMatrix()
     GL11.glTranslated(-dx, -dy, -dz)
 
     for (renderer <- renderers) {
       try {
-        renderer.doRender(ev.partialTicks)
+        renderer.doRender(ev.getPartialTicks)
       } catch {
         case t: Throwable =>
           AE2Stuff.logErrorException("Error in overlay renderer %s", t, renderer)
@@ -51,14 +51,14 @@ object OverlayRenderHandler {
   }
 
   def renderFloatingText(text: String, x: Double, y: Double, z: Double, color: Int): Unit = {
-    val renderManager = RenderManager.instance
+    val renderManager = Client.minecraft.getRenderManager
     val fontRenderer = Client.fontRenderer
-    val tessellator = Tessellator.instance
+    val tessellator = Tessellator.getInstance()
 
     val scale = 0.027F
     GL11.glColor4f(1f, 1f, 1f, 0.5f)
     GL11.glPushMatrix()
-    GL11.glTranslated(pos)
+    GL11.glTranslated(x, y, z)
     GL11.glNormal3f(0.0F, 1.0F, 0.0F)
     GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F)
     GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F)
@@ -68,18 +68,21 @@ object OverlayRenderHandler {
     GL11.glDisable(GL11.GL_DEPTH_TEST)
     GL11.glEnable(GL11.GL_BLEND)
     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+    GL11.glDisable(GL11.GL_TEXTURE_2D)
 
     val yOffset = -4
-
-    GL11.glDisable(GL11.GL_TEXTURE_2D)
-    tessellator.startDrawingQuads()
     val stringMiddle = fontRenderer.getStringWidth(text) / 2
-    tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.5F)
-    tessellator.addVertex(-stringMiddle - 1, -1 + yOffset, 0.0D)
-    tessellator.addVertex(-stringMiddle - 1, 8 + yOffset, 0.0D)
-    tessellator.addVertex(stringMiddle + 1, 8 + yOffset, 0.0D)
-    tessellator.addVertex(stringMiddle + 1, -1 + yOffset, 0.0D)
+
+    val buffer = tessellator.getBuffer
+    buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR)
+
+    buffer.pos(-stringMiddle - 1, -1 + yOffset, 0.0D).color(0, 0, 0, 0.5f).endVertex()
+    buffer.pos(-stringMiddle - 1, 8 + yOffset, 0.0D).color(0, 0, 0, 0.5f).endVertex()
+    buffer.pos(stringMiddle + 1, 8 + yOffset, 0.0D).color(0, 0, 0, 0.5f).endVertex()
+    buffer.pos(stringMiddle + 1, -1 + yOffset, 0.0D).color(0, 0, 0, 0.5f).endVertex()
+
     tessellator.draw()
+
     GL11.glEnable(GL11.GL_TEXTURE_2D)
     GL11.glColor4f(1f, 1f, 1f, 0.5f)
     fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, yOffset, color)

@@ -1,0 +1,24 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "top": "ae2stuff:blocks/inscriber/top",
+      "bottom": "ae2stuff:blocks/inscriber/top",
+      "side": "ae2stuff:blocks/inscriber/side_off"
+    },
+    "model": "minecraft:cube_bottom_top"
+  },
+  "variants": {
+    "active": {
+      "true": {
+        "textures": {
+          "side": "ae2stuff:blocks/inscriber/side_on"
+        }
+      },
+      "false": {}
+    },
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

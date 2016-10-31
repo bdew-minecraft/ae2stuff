@@ -10,7 +10,7 @@
 package net.bdew.ae2stuff.machines.grower
 
 import net.bdew.ae2stuff.AE2Stuff
-import net.bdew.ae2stuff.misc.{BlockWrenchable, MachineMaterial}
+import net.bdew.ae2stuff.misc.{BlockActiveTexture, BlockWrenchable, MachineMaterial}
 import net.bdew.lib.block.{BaseBlock, BlockKeepData, HasTE}
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
-object BlockGrower extends BaseBlock("Grower", MachineMaterial) with HasTE[TileGrower] with BlockKeepData with BlockWrenchable {
+object BlockGrower extends BaseBlock("Grower", MachineMaterial) with HasTE[TileGrower] with BlockKeepData with BlockWrenchable with BlockActiveTexture {
   override val TEClass = classOf[TileGrower]
 
   setHardness(1)

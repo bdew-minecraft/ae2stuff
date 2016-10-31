@@ -15,14 +15,17 @@ import appeng.api.features.{IInscriberRecipe, InscriberProcessType}
 import appeng.api.networking.GridNotification
 import net.bdew.ae2stuff.grid.{GridTile, PoweredTile}
 import net.bdew.ae2stuff.misc.UpgradeInventory
+import net.bdew.lib.PimpVanilla._
 import net.bdew.lib.block.TileKeepData
 import net.bdew.lib.data.base.{TileDataSlots, UpdateKind}
-import net.bdew.lib.data.{DataSlotBoolean, DataSlotFloat}
+import net.bdew.lib.data.{DataSlotBoolean, DataSlotFloat, DataSlotOption}
 import net.bdew.lib.items.ItemUtils
 import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
-import net.minecraft.block.Block
+import net.minecraft.block.state.IBlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.EnumFacing
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class TileInscriber extends TileDataSlots with GridTile with SidedInventory with PersistentInventoryTile with PoweredTile with TileKeepData {
@@ -39,7 +42,7 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
 
   val upgrades = new UpgradeInventory("upgrades", this, 5, Set(Upgrades.SPEED))
   val progress = DataSlotFloat("progress", this).setUpdate(UpdateKind.SAVE, UpdateKind.GUI)
-  val output = DataSlotItemStack("output", this).setUpdate(UpdateKind.SAVE)
+  val output = DataSlotOption[ItemStack]("output", this).setUpdate(UpdateKind.SAVE)
 
   val topLocked = DataSlotBoolean("topLocked", this, true).setUpdate(UpdateKind.SAVE, UpdateKind.GUI)
   val bottomLocked = DataSlotBoolean("bottomLocked", this, true).setUpdate(UpdateKind.SAVE, UpdateKind.GUI)
@@ -50,17 +53,17 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
     if (!tag.hasKey("bottomLocked")) bottomLocked := true
   })
 
-  def isWorking = output :!= null
+  def isWorking = output.isDefined
 
   serverTick.listen(() => {
     if (isAwake) {
       if (!isWorking) {
         // No progress going - try starting
         findFinalRecipe foreach { recipe =>
-          output := recipe.getOutput
+          output.set(recipe.getOutput.copy())
           progress := 0
           decrStackSize(slots.middle, 1)
-          if (recipe.getProcessType == InscriberProcessType.Press) {
+          if (recipe.getProcessType == InscriberProcessType.PRESS) {
             decrStackSize(slots.top, 1)
             decrStackSize(slots.bottom, 1)
           }
@@ -85,20 +88,22 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
         }
         if (progress >= 1) {
           // Finished - try to output
-          val oStack = getStackInSlot(slots.output)
-          if (oStack == null || (ItemUtils.isSameItem(oStack, output) && oStack.stackSize + output.stackSize <= oStack.getMaxStackSize)) {
-            // Can output - finish process
-            if (oStack == null) {
-              setInventorySlotContents(slots.output, output)
+          output foreach { toOutput =>
+            val oStack = getStackInSlot(slots.output)
+            if (oStack == null || (ItemUtils.isSameItem(oStack, toOutput) && oStack.stackSize + toOutput.stackSize <= oStack.getMaxStackSize)) {
+              // Can output - finish process
+              if (oStack == null) {
+                setInventorySlotContents(slots.output, toOutput)
+              } else {
+                oStack.stackSize += toOutput.stackSize
+                markDirty()
+              }
+              output.unset()
+              progress := 0
             } else {
-              oStack.stackSize += output.stackSize
-              markDirty()
+              // Can't output - switch to sleep mode
+              sleep()
             }
-            output := null
-            progress := 0
-          } else {
-            // Can't output - switch to sleep mode
-            sleep()
           }
         }
         requestPowerIfNeeded()
@@ -128,8 +133,8 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
     AEApi.instance().registries().inscriber().getRecipes find isMatchingFullRecipe
 
   def isMatchingFullRecipe(rec: IInscriberRecipe) = getStackInSlot(slots.middle) != null &&
-    ItemUtils.isSameItem(rec.getTopOptional.orNull(), getStackInSlot(slots.top)) &&
-    ItemUtils.isSameItem(rec.getBottomOptional.orNull(), getStackInSlot(slots.bottom)) &&
+    ItemUtils.isSameItem(rec.getTopOptional.orElse(null), getStackInSlot(slots.top)) &&
+    ItemUtils.isSameItem(rec.getBottomOptional.orElse(null), getStackInSlot(slots.bottom)) &&
     rec.getInputs.exists(rs => ItemUtils.isSameItem(rs, getStackInSlot(slots.middle)))
 
   def isMatchingPartialRecipe(rec: IInscriberRecipe, top: Option[ItemStack], middle: Option[ItemStack], bottom: Option[ItemStack]): Boolean = {
@@ -158,14 +163,15 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
     case _ => false
   }
 
-  override def canExtractItem(slot: Int, stack: ItemStack, side: Int) = slot match {
+  override def canExtractItem(slot: Int, stack: ItemStack, side: EnumFacing) = slot match {
     case slots.output => true
     case slots.top => (!topLocked) && (output :== null) && inv(slots.middle) == null
     case slots.bottom => (!bottomLocked) && (output :== null) && inv(slots.middle) == null
     case _ => false
   }
 
-  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, pos: BlockPos) = oldBlock != newBlock
-  onWake.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3))
-  onSleep.listen(() => worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3))
+  override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockInscriber
+
+  onWake.listen(() => BlockInscriber.setActive(worldObj, pos, true))
+  onSleep.listen(() => BlockInscriber.setActive(worldObj, pos, false))
 }

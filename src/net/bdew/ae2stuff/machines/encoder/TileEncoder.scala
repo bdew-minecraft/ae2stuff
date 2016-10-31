@@ -19,7 +19,6 @@ import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.PimpVanilla._
 import net.bdew.lib.block.TileKeepData
 import net.bdew.lib.nbt.NBT
-import net.bdew.lib.rotate.RotatableTile
 import net.bdew.lib.tile.TileExtended
 import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
 import net.minecraft.block.state.IBlockState
@@ -30,7 +29,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.oredict.OreDictionary
 
-class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with SidedInventory with RotatableTile with TileKeepData {
+class TileEncoder extends TileExtended with GridTile with PersistentInventoryTile with SidedInventory with TileKeepData {
   override def getSizeInventory = 12
 
   object slots {
@@ -119,9 +118,7 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
 
   @MENetworkEventSubscribe
   def networkPowerStatusChange(ev: MENetworkPowerStatusChange): Unit = {
-    val currentState = worldObj.getBlockState(pos)
-    if (currentState.getValue(BlockEncoder.ACTIVE) != node.isActive)
-      worldObj.setBlockState(pos, currentState.withProperty(BlockEncoder.ACTIVE, Boolean.box(node.isActive)), 3)
+    BlockEncoder.setActive(worldObj, pos, node.isActive)
   }
 
   override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockEncoder

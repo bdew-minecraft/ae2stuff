@@ -11,26 +11,25 @@ package net.bdew.ae2stuff.waila
 
 import mcp.mobius.waila.api.{IWailaConfigHandler, IWailaDataAccessor}
 import net.bdew.ae2stuff.machines.wireless.TileWireless
+import net.bdew.lib.PimpVanilla._
 import net.bdew.lib.nbt.NBT
 import net.bdew.lib.{DecFormat, Misc}
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 object WailaWirelessDataProvider extends BaseDataProvider(classOf[TileWireless]) {
   override def getNBTTag(player: EntityPlayerMP, te: TileWireless, tag: NBTTagCompound, world: World, pos: BlockPos): NBTTagCompound = {
-    if (te.isLinked) {
-      val pos = te.link map (link => NBT.from(link.writeToNBT _)) getOrElse new NBTTagCompound
-      tag.setTag("wireless_waila", NBT(
+    tag.setTag("wireless_waila",
+      te.link map (link => NBT(
         "connected" -> true,
-        "target" -> pos,
+        "target" -> link,
         "channels" -> (if (te.connection != null) te.connection.getUsedChannels else 0),
         "power" -> te.getIdlePowerUsage
-      ))
-    } else {
-      tag.setTag("wireless_waila", NBT("connected" -> false))
-    }
+      )) getOrElse NBT("connected" -> false)
+    )
     tag
   }
 
@@ -38,12 +37,13 @@ object WailaWirelessDataProvider extends BaseDataProvider(classOf[TileWireless])
     if (acc.getNBTData.hasKey("wireless_waila")) {
       val data = acc.getNBTData.getCompoundTag("wireless_waila")
       if (data.getBoolean("connected")) {
-        val pos = BlockRef.fromNBT(data.getCompoundTag("target"))
-        List(
-          Misc.toLocalF("ae2stuff.waila.wireless.connected", pos.x, pos.y, pos.z),
-          Misc.toLocalF("ae2stuff.waila.wireless.channels", data.getInteger("channels")),
-          Misc.toLocalF("ae2stuff.waila.wireless.power", DecFormat.short(data.getDouble("power")))
-        )
+        data.get[BlockPos]("target") map { pos =>
+          List(
+            Misc.toLocalF("ae2stuff.waila.wireless.connected", pos.getX, pos.getY, pos.getZ),
+            Misc.toLocalF("ae2stuff.waila.wireless.channels", data.getInteger("channels")),
+            Misc.toLocalF("ae2stuff.waila.wireless.power", DecFormat.short(data.getDouble("power")))
+          )
+        } getOrElse List(Misc.toLocal("ae2stuff.waila.wireless.notconnected"))
       } else {
         List(Misc.toLocal("ae2stuff.waila.wireless.notconnected"))
       }

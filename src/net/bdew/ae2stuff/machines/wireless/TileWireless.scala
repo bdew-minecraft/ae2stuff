@@ -15,10 +15,12 @@ import appeng.api.AEApi
 import appeng.api.networking.{GridFlags, IGridConnection}
 import net.bdew.ae2stuff.AE2Stuff
 import net.bdew.ae2stuff.grid.{GridTile, VariableIdlePower}
+import net.bdew.lib.PimpVanilla._
 import net.bdew.lib.data.base.{TileDataSlots, UpdateKind}
 import net.bdew.lib.multiblock.data.DataSlotPos
-import net.minecraft.block.Block
+import net.minecraft.block.state.IBlockState
 import net.minecraft.item.ItemStack
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
@@ -28,10 +30,8 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
 
   var connection: IGridConnection = null
 
-  lazy val myPos = BlockRef.fromTile(this)
-
   def isLinked = link.isDefined
-  def getLink = link flatMap (_.getTile[TileWireless](worldObj))
+  def getLink = link flatMap worldObj.getTileSafe[TileWireless]
 
   override def getFlags = util.EnumSet.of(GridFlags.DENSE_CAPACITY)
 
@@ -43,8 +43,8 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
 
   def doLink(other: TileWireless): Boolean = {
     if (other.link.isEmpty) {
-      other.link.set(myPos)
-      link.set(other.myPos)
+      other.link.set(pos)
+      link.set(other.getPos)
       setupConnection()
     } else false
   }
@@ -62,18 +62,15 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
       try {
         connection = AEApi.instance().createGridConnection(this.getNode, that.getNode)
         that.connection = connection
-        val dx = this.xCoord - that.xCoord
-        val dy = this.yCoord - that.yCoord
-        val dz = this.zCoord - that.zCoord
-        val power = cfg.powerBase + cfg.powerDistanceMultiplier * (dx * dx + dy * dy + dz * dz)
+        val power = cfg.powerBase + cfg.powerDistanceMultiplier * this.pos.distanceSq(that.pos)
         this.setIdlePowerUse(power)
         that.setIdlePowerUse(power)
-        worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 3)
-        worldObj.setBlockMetadataWithNotify(that.xCoord, that.yCoord, that.zCoord, 1, 3)
+        BlockWireless.setActive(worldObj, pos, true)
+        BlockWireless.setActive(worldObj, that.getPos, true)
         return true
       } catch {
         case t: Exception =>
-          AE2Stuff.logWarnException("Failed setting up wireless link %s <-> %s", t, myPos, that.myPos)
+          AE2Stuff.logWarnException("Failed setting up wireless link %s <-> %s", t, pos, that.getPos)
           doUnlink()
       }
     }
@@ -88,13 +85,12 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
     getLink foreach { other =>
       other.connection = null
       other.setIdlePowerUse(0D)
-      worldObj.setBlockMetadataWithNotify(other.xCoord, other.yCoord, other.zCoord, 0, 3)
+      BlockWireless.setActive(worldObj, other.getPos, false)
     }
-    worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3)
+    BlockWireless.setActive(worldObj, pos, false)
   }
 
   override def getMachineRepresentation: ItemStack = new ItemStack(BlockWireless)
 
-  override def shouldRefresh(oldBlock: Block, newBlock: Block, oldMeta: Int, newMeta: Int, world: World, pos: BlockPos): Boolean =
-    newBlock != BlockWireless
+  override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockWireless
 }

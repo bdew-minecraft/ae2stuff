@@ -1,0 +1,22 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "all": "ae2stuff:blocks/grower/main_off"
+    },
+    "model": "minecraft:cube_all"
+  },
+  "variants": {
+    "active": {
+      "true": {
+        "textures": {
+          "all": "ae2stuff:blocks/grower/main_on"
+        }
+      },
+      "false": {}
+    },
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

@@ -12,6 +12,7 @@ package net.bdew.ae2stuff.items.visualiser
 import net.bdew.ae2stuff.misc.{OverlayRenderHandler, WorldOverlayRenderer}
 import net.bdew.ae2stuff.network.{MsgVisualisationData, NetHandler}
 import net.bdew.lib.Client
+import net.minecraft.inventory.EntityEquipmentSlot
 import org.lwjgl.opengl.GL11
 
 object VisualiserOverlayRender extends WorldOverlayRenderer {
@@ -110,49 +111,57 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
 
   override def doRender(partialTicks: Float): Unit = {
     if (Client.player != null) {
-      val stack = Client.player.inventory.getCurrentItem
-      if (stack != null && stack.getItem == ItemVisualiser) {
 
-        val mode = ItemVisualiser.getMode(stack)
+      val main = Client.player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND)
+      val off = Client.player.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND)
 
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT)
+      val stack =
+        if (main != null && main.getItem == ItemVisualiser)
+          main
+        else if (off != null && off.getItem == ItemVisualiser)
+          off
+        else return
 
-        GL11.glDisable(GL11.GL_LIGHTING)
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glDisable(GL11.GL_DEPTH_TEST)
 
-        if (needListRefresh) {
-          needListRefresh = false
-          GL11.glNewList(staticList, GL11.GL_COMPILE)
+      val mode = ItemVisualiser.getMode(stack)
 
-          if (renderNodesModes.contains(mode))
-            renderNodes()
+      GL11.glPushAttrib(GL11.GL_ENABLE_BIT)
 
-          GL11.glEnable(GL11.GL_LINE_SMOOTH)
-          GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST)
+      GL11.glDisable(GL11.GL_LIGHTING)
+      GL11.glDisable(GL11.GL_TEXTURE_2D)
+      GL11.glDisable(GL11.GL_DEPTH_TEST)
 
-          if (renderLinksModes.contains(mode)) {
-            renderLinks(dense, 16F, mode == VisualisationModes.P2P)
-            renderLinks(normal, 4F, mode == VisualisationModes.P2P)
-          }
+      if (needListRefresh) {
+        needListRefresh = false
+        GL11.glNewList(staticList, GL11.GL_COMPILE)
 
-          GL11.glEndList()
+        if (renderNodesModes.contains(mode))
+          renderNodes()
+
+        GL11.glEnable(GL11.GL_LINE_SMOOTH)
+        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST)
+
+        if (renderLinksModes.contains(mode)) {
+          renderLinks(dense, 16F, mode == VisualisationModes.P2P)
+          renderLinks(normal, 4F, mode == VisualisationModes.P2P)
         }
 
-        GL11.glCallList(staticList)
-
-
-        // Labels are rendered every frame because they need to face the camera
-
-        if (mode == VisualisationModes.FULL) {
-          for (link <- currentLinks.links if link.channels > 0) {
-            OverlayRenderHandler.renderFloatingText(link.channels.toString,
-              (link.node1.x + link.node2.x) / 2D + 0.5D, (link.node1.y + link.node2.y) / 2D + 0.5D, (link.node1.z + link.node2.z) / 2D + 0.5D, 0xFFFFFF)
-          }
-        }
-
-        GL11.glPopAttrib()
+        GL11.glEndList()
       }
+
+      GL11.glCallList(staticList)
+
+
+      // Labels are rendered every frame because they need to face the camera
+
+      if (mode == VisualisationModes.FULL) {
+        for (link <- currentLinks.links if link.channels > 0) {
+          OverlayRenderHandler.renderFloatingText(link.channels.toString,
+            (link.node1.x + link.node2.x) / 2D + 0.5D, (link.node1.y + link.node2.y) / 2D + 0.5D, (link.node1.z + link.node2.z) / 2D + 0.5D, 0xFFFFFF)
+        }
+      }
+
+      GL11.glPopAttrib()
     }
   }
 }

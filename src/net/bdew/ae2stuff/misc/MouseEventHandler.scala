@@ -23,7 +23,7 @@ object MouseEventHandler {
 
   @SubscribeEvent
   def handleMouseEvent(ev: MouseEvent) {
-    if (ev.dwheel == 0) return
+    if (ev.getDwheel == 0) return
     if (Client.minecraft.currentScreen != null) return
     val player = Client.player
     if (player == null || !player.isSneaking) return
@@ -31,7 +31,7 @@ object MouseEventHandler {
     if (stack == null || stack.getItem == null) return
     if (stack.getItem == ItemVisualiser) {
       val newMode =
-        if (ev.dwheel.signum > 0)
+        if (ev.getDwheel.signum > 0)
           Misc.nextInSeq(VisualisationModes.modes, ItemVisualiser.getMode(stack))
         else
           Misc.prevInSeq(VisualisationModes.modes, ItemVisualiser.getMode(stack))
