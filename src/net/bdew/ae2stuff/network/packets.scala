@@ -12,7 +12,6 @@ package net.bdew.ae2stuff.network
 import net.bdew.ae2stuff.items.visualiser.{VisualisationData, VisualisationModes}
 import net.bdew.lib.network.NBTTagCompoundSerialize
 
-@deprecated("Use MsgSetRecipe2 instead", "AE2Stuff 0.4")
 case class MsgSetRecipe(recipe: NBTTagCompoundSerialize) extends NetHandler.Message
 
 case class MsgSetLock(slot: String, lock: Boolean) extends NetHandler.Message

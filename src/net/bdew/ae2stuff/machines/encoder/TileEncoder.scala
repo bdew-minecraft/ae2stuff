@@ -67,7 +67,8 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
             NBT.from(x.writeToNBT _)
         ).toList,
         "out" -> List(getResult),
-        "crafting" -> true
+        "crafting" -> true,
+        "substitute" -> true
       )
     )
 
