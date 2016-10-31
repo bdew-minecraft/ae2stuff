@@ -98,7 +98,6 @@ sourceSets {
         resources {
             srcDir 'resources'
         }
-        output.resourcesDir = output.classesDir // Hack for IDEA
     }
 }
 
