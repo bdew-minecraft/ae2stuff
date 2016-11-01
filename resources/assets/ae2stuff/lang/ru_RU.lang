@@ -1,6 +1,45 @@
 tile.ae2stuff.Encoder.name=Кодировщик шаблонов
 tile.ae2stuff.Grower.name=Камера для выращивания кристаллов
+tile.ae2stuff.Inscriber.name=Продвинутый высекатель
+tile.ae2stuff.Wireless.name=Беспроводной соединитель
+
+item.ae2stuff.WirelessKit.name=Беспроводной комплект настройки
+item.ae2stuff.Visualiser.name=Инструмент визуализации сети
 
 ae2stuff.error.not_connected=Нет соединения с сетью
+
+ae2stuff.waila.sleep.true=Не работает
+ae2stuff.waila.sleep.false=Работает
+ae2stuff.waila.power=%s / %s AE
+
+ae2stuff.waila.wireless.connected=Подключен к %s,%s,%s
+ae2stuff.waila.wireless.notconnected=Не подключен
+ae2stuff.waila.wireless.channels=Каналы: %s
+ae2stuff.waila.wireless.power=Энергопотребление: %s AE/t
+
+ae2stuff.gui.lock.on=Заблокированный - Не может быть удалён автоматически
+ae2stuff.gui.lock.off=Разблокированный - Может быть удалён автоматически
+ae2stuff.gui.lock.note=Если ни один из процессов не активен, и средний слот пуст
+
+ae2stuff.gui.recipes=Рецепты
+
+ae2stuff.wireless.tool.empty=Нажмите на беспроводной соединитель для связывания
+ae2stuff.wireless.tool.bound1=Связан с %s,%s,%s
+ae2stuff.wireless.tool.bound2=Нажмите на другой беспроводной соединитель для подключения
+ae2stuff.wireless.tool.connected=Подключен к %s,%s,%s
+ae2stuff.wireless.tool.failed=Не удалось подключиться
+ae2stuff.wireless.tool.dimension=Оба соединителя должны быть в одном измерении
+ae2stuff.wireless.tool.noexist=Связанный соединитель не существует
+ae2stuff.wireless.tool.security.network=Нарушение безопасности - сети не могут быть подключены
+ae2stuff.wireless.tool.security.player=Нарушение безопасности - вы не можете изменить эту сеть
+
+ae2stuff.visualiser.bound=Визуализация сети на %s,%s,%s
+ae2stuff.visualiser.mode=Режим:
+ae2stuff.visualiser.set=Режим изменён на "%s"
+ae2stuff.visualiser.mode.full=Показывать всё
+ae2stuff.visualiser.mode.nodes=Показывать узлы
+ae2stuff.visualiser.mode.channels=Показывать каналы
+ae2stuff.visualiser.mode.nonum=Показывать каналы и узлы
+ae2stuff.visualiser.mode.p2p=Показывать P2P-соединения
 
 itemGroup.bdew.ae2stuff=AE2 Stuff
