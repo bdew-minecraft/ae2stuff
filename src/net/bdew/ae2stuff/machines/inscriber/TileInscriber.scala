@@ -165,8 +165,8 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
 
   override def canExtractItem(slot: Int, stack: ItemStack, side: EnumFacing) = slot match {
     case slots.output => true
-    case slots.top => (!topLocked) && (output :== null) && inv(slots.middle) == null
-    case slots.bottom => (!bottomLocked) && (output :== null) && inv(slots.middle) == null
+    case slots.top => (!topLocked) && output.isDefined && inv(slots.middle) == null
+    case slots.bottom => (!bottomLocked) && output.isDefined && inv(slots.middle) == null
     case _ => false
   }
 
