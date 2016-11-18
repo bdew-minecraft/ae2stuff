@@ -13,6 +13,7 @@ import java.util
 import java.util.Locale
 
 import appeng.api.networking.{GridFlags, IGridConnection, IGridHost}
+import appeng.api.util.AEPartLocation
 import com.mojang.realmsclient.gui.ChatFormatting
 import net.bdew.ae2stuff.misc.ItemLocationStore
 import net.bdew.ae2stuff.network.{MsgVisualisationData, MsgVisualisationMode, NetHandler}
@@ -82,7 +83,7 @@ object ItemVisualiser extends BaseItem("Visualiser") with ItemLocationStore {
     for {
       boundLoc <- getLocation(stack) if (boundLoc.dim == world.provider.getDimension) && VisualiserPlayerTracker.needToUpdate(player, boundLoc)
       host <- world.getTileSafe[IGridHost](boundLoc.pos)
-      node <- Option(host.getGridNode(null))
+      node <- Option(host.getGridNode(AEPartLocation.INTERNAL))
       grid <- Option(node.getGrid)
     } {
       import scala.collection.JavaConversions._
