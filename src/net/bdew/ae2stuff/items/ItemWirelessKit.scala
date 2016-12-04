@@ -22,7 +22,7 @@ import net.bdew.lib.items.BaseItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.{EnumActionResult, EnumFacing, EnumHand}
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumFacing, EnumHand}
 import net.minecraft.world.World
 
 object ItemWirelessKit extends BaseItem("WirelessKit") with ItemLocationStore {
@@ -32,6 +32,14 @@ object ItemWirelessKit extends BaseItem("WirelessKit") with ItemLocationStore {
     val pid = Security.getPlayerId(p)
     Security.playerHasPermission(t1.getNode.getGrid, pid, SecurityPermissions.BUILD) &&
       Security.playerHasPermission(t2.getNode.getGrid, pid, SecurityPermissions.BUILD)
+  }
+
+  override def onItemRightClick(stack: ItemStack, world: World, player: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
+    if (player.isSneaking && !world.isRemote) {
+      val copy = stack.copy()
+      clearLocation(copy)
+      ActionResult.newResult(EnumActionResult.SUCCESS, copy)
+    } else ActionResult.newResult(EnumActionResult.PASS, stack)
   }
 
   override def onItemUse(stack: ItemStack, player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult = {
@@ -50,6 +58,7 @@ object ItemWirelessKit extends BaseItem("WirelessKit") with ItemLocationStore {
               if (otherLoc.dim != world.provider.getDimension) {
                 // Different dimensions - error out
                 player.addChatMessage(L("ae2stuff.wireless.tool.dimension").setColor(Color.RED))
+                clearLocation(stack)
               } else if (pos == otherLoc.pos) {
                 // Same block - clear the location
                 clearLocation(stack)
