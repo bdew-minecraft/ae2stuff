@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
-object BlockWireless extends BaseBlock("Wireless", MachineMaterial) with HasTE[TileWireless] with BlockWrenchable with BlockActiveTexture {
+object BlockWireless extends BaseBlock("wireless", MachineMaterial) with HasTE[TileWireless] with BlockWrenchable with BlockActiveTexture {
   override val TEClass = classOf[TileWireless]
 
   setHardness(1)

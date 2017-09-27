@@ -1,9 +1,9 @@
-tile.ae2stuff.Encoder.name=样板编码台
-tile.ae2stuff.Grower.name=晶体催生仓
-tile.ae2stuff.Inscriber.name=高级压印器
-tile.ae2stuff.Wireless.name=无线接入器 
+tile.ae2stuff.encoder.name=样板编码台
+tile.ae2stuff.grower.name=晶体催生仓
+tile.ae2stuff.inscriber.name=高级压印器
+tile.ae2stuff.wireless.name=无线接入器
 
-item.ae2stuff.WirelessKit.name=无线设置工具
+item.ae2stuff.wireless_kit.name=无线设置工具
 
 ae2stuff.error.not_connected=未连接网络
 

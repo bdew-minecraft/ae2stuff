@@ -18,7 +18,7 @@ import net.bdew.lib.gui.{Point, Rect}
 import scala.collection.mutable
 
 case class WidgetSlotLock(rect: Rect, state: DataSlotBoolean, slot: String) extends Widget {
-  override def draw(mouse: Point): Unit = {
+  override def draw(mouse: Point, partial: Float): Unit = {
     if (state)
       parent.drawTexture(rect, Icons.lockOn)
     else

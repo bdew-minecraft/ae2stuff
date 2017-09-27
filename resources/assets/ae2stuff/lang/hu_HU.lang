@@ -1,10 +1,10 @@
-tile.ae2stuff.Encoder.name=Minta Kódoló
-tile.ae2stuff.Grower.name=Kristály Növelő Kamra
-tile.ae2stuff.Inscriber.name=Fejlett Karcoló
-tile.ae2stuff.Wireless.name=Vezetéknélküli Csatlakozó
+tile.ae2stuff.encoder.name=Minta Kódoló
+tile.ae2stuff.grower.name=Kristály Növelő Kamra
+tile.ae2stuff.inscriber.name=Fejlett Karcoló
+tile.ae2stuff.wireless.name=Vezetéknélküli Csatlakozó
 
-item.ae2stuff.WirelessKit.name=Wireless Setup Kit
-item.ae2stuff.Visualiser.name=Network Visualisation Tool
+item.ae2stuff.wireless_kit.name=Wireless Setup Kit
+item.ae2stuff.visualiser.name=Network Visualisation Tool
 
 ae2stuff.error.not_connected=Hálózat nincs csatlakoztatva
 

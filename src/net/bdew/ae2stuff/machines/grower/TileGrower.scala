@@ -41,11 +41,11 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
   val fluixCrystal = AE2Defs.materials.fluixCrystal
 
   serverTick.listen(() => {
-    if (worldObj.getTotalWorldTime % MachineGrower.cycleTicks == 0 && isAwake) {
+    if (world.getTotalWorldTime % MachineGrower.cycleTicks == 0 && isAwake) {
       var hadWork = false
       val needPower = MachineGrower.cyclePower * (1 + upgrades.cards(Upgrades.SPEED))
       if (powerStored >= needPower) {
-        val invZipped = inv.zipWithIndex.filter(_._1 != null)
+        val invZipped = inv.zipWithIndex.filterNot(_._1.isEmpty)
         for ((stack, slot) <- invZipped if stack.getItem.isInstanceOf[IGrowableCrystal]) {
           var ns = stack
           for (i <- 0 to upgrades.cards(Upgrades.SPEED) if stack.getItem.isInstanceOf[IGrowableCrystal])
@@ -57,7 +57,7 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
           (cert, certPos) <- invZipped.find(x => chargedCertusQuartz.isSameAs(x._1))
           redstonePos <- ItemUtils.findItemInInventory(this, redstoneDust)
           netherPos <- ItemUtils.findItemInInventory(this, netherQuartz)
-          (_, empty) <- inv.zipWithIndex.find(x => x._1 == null || (fluixCrystal.isSameAs(x._1) && x._1.stackSize <= x._1.getMaxStackSize - 2))
+          (_, empty) <- inv.zipWithIndex.find(x => x._1.isEmpty || (fluixCrystal.isSameAs(x._1) && x._1.getCount <= x._1.getMaxStackSize - 2))
         } {
           decrStackSize(certPos, 1)
           decrStackSize(netherPos, 1)
@@ -94,7 +94,7 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
   override def getIdlePowerUsage = MachineGrower.idlePowerDraw
 
   override def isItemValidForSlot(slot: Int, stack: ItemStack) =
-    stack != null && (
+    !stack.isEmpty && (
       stack.getItem.isInstanceOf[IGrowableCrystal]
         || stack.getItem == netherQuartz
         || stack.getItem == redstoneDust
@@ -105,6 +105,6 @@ class TileGrower extends TileDataSlots with GridTile with SidedInventory with Pe
 
   override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockGrower
 
-  onWake.listen(() => BlockGrower.setActive(worldObj, pos, true))
-  onSleep.listen(() => BlockGrower.setActive(worldObj, pos, false))
+  onWake.listen(() => BlockGrower.setActive(world, pos, true))
+  onSleep.listen(() => BlockGrower.setActive(world, pos, false))
 }

@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
-object BlockGrower extends BaseBlock("Grower", MachineMaterial) with HasTE[TileGrower] with BlockKeepData with BlockWrenchable with BlockActiveTexture {
+object BlockGrower extends BaseBlock("grower", MachineMaterial) with HasTE[TileGrower] with BlockKeepData with BlockWrenchable with BlockActiveTexture {
   override val TEClass = classOf[TileGrower]
 
   setHardness(1)

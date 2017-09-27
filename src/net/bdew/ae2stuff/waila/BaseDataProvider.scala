@@ -86,5 +86,5 @@ class BaseDataProvider[T](cls: Class[T]) extends IWailaDataProvider {
     tip
   }
 
-  override def getWailaStack(accessor: IWailaDataAccessor, config: IWailaConfigHandler): ItemStack = null
+  override def getWailaStack(accessor: IWailaDataAccessor, config: IWailaConfigHandler): ItemStack = ItemStack.EMPTY
 }

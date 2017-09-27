@@ -35,7 +35,7 @@ class VisualisationData(var nodes: Seq[VNode], var links: Seq[VLink]) extends Ex
     } else {
       val nodeCount = in.readInt()
       val linkCount = in.readInt()
-      nodes = Vector.empty ++ (for (x <- 0 until nodeCount) yield {
+      nodes = Vector.empty ++ (for (i <- 0 until nodeCount) yield {
         val x = in.readInt()
         val y = in.readInt()
         val z = in.readInt()
@@ -43,7 +43,7 @@ class VisualisationData(var nodes: Seq[VNode], var links: Seq[VLink]) extends Ex
         VNode(x, y, z, VNodeFlags.ValueSet.fromBitMask(Array(f.toLong)))
       })
 
-      links = for (x <- 0 until linkCount) yield {
+      links = for (i <- 0 until linkCount) yield {
         val n1 = in.readInt()
         val n2 = in.readInt()
         val c = in.readByte()

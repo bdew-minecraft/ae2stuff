@@ -21,7 +21,7 @@ import net.minecraft.util._
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-object BlockEncoder extends BaseBlock("Encoder", MachineMaterial) with HasTE[TileEncoder] with BlockWrenchable with BlockFacingMeta with BlockKeepData with BlockActiveTexture {
+object BlockEncoder extends BaseBlock("encoder", MachineMaterial) with HasTE[TileEncoder] with BlockWrenchable with BlockFacingMeta with BlockKeepData with BlockActiveTexture {
   override val TEClass = classOf[TileEncoder]
 
   setHardness(1)
@@ -40,7 +40,7 @@ object BlockEncoder extends BaseBlock("Encoder", MachineMaterial) with HasTE[Til
       player.openGui(AE2Stuff, MachineEncoder.guiId, world, pos.getX, pos.getY, pos.getZ)
     } else {
       import net.bdew.lib.helpers.ChatHelper._
-      player.addChatMessage(L("ae2stuff.error.not_connected").setColor(Color.RED))
+      player.sendStatusMessage(L("ae2stuff.error.not_connected").setColor(Color.RED), true)
     }
     true
   }

@@ -27,7 +27,5 @@ class ContainerInscriber(val te: TileInscriber, player: EntityPlayer) extends Ba
 
   bindPlayerInventory(player.inventory, 8, 94, 152)
 
-  initUpgradeable(te, te.upgrades, player, 186, 113, addSlotToContainer(_))
-
-  override def canInteractWith(p: EntityPlayer) = te.isUseableByPlayer(p)
+  initUpgradeable(te, te.upgrades, player, 186, 113, addSlotToContainer)
 }

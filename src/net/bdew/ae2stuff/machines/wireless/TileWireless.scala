@@ -31,7 +31,7 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
   var connection: IGridConnection = null
 
   def isLinked = link.isDefined
-  def getLink = link flatMap worldObj.getTileSafe[TileWireless]
+  def getLink = link flatMap world.getTileSafe[TileWireless]
 
   override def getFlags = util.EnumSet.of(GridFlags.DENSE_CAPACITY)
 
@@ -65,8 +65,8 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
         val power = cfg.powerBase + cfg.powerDistanceMultiplier * this.pos.distanceSq(that.pos)
         this.setIdlePowerUse(power)
         that.setIdlePowerUse(power)
-        BlockWireless.setActive(worldObj, pos, true)
-        BlockWireless.setActive(worldObj, that.getPos, true)
+        BlockWireless.setActive(world, pos, true)
+        BlockWireless.setActive(world, that.getPos, true)
         return true
       } catch {
         case t: Exception =>
@@ -85,9 +85,9 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
     getLink foreach { other =>
       other.connection = null
       other.setIdlePowerUse(0D)
-      BlockWireless.setActive(worldObj, other.getPos, false)
+      BlockWireless.setActive(world, other.getPos, false)
     }
-    BlockWireless.setActive(worldObj, pos, false)
+    BlockWireless.setActive(world, pos, false)
   }
 
   override def getMachineRepresentation: ItemStack = new ItemStack(BlockWireless)

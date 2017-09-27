@@ -1,6 +1,6 @@
-tile.ae2stuff.Encoder.name=Schablonenkodierer
-tile.ae2stuff.Grower.name=Kristallwachstumskammer
-tile.ae2stuff.Inscriber.name=Erweiterte Gravurmaschine
+tile.ae2stuff.encoder.name=Schablonenkodierer
+tile.ae2stuff.grower.name=Kristallwachstumskammer
+tile.ae2stuff.inscriber.name=Erweiterte Gravurmaschine
 
 ae2stuff.error.not_connected=Netzwerk nicht verbunden
 

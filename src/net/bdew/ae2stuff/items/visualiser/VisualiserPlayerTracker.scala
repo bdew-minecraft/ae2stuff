@@ -32,13 +32,13 @@ object VisualiserPlayerTracker {
   def needToUpdate(player: EntityPlayer, loc: PosAndDimension): Boolean = {
     if (map.isDefinedAt(player)) {
       val last = map(player)
-      val now = player.worldObj.getTotalWorldTime
+      val now = player.world.getTotalWorldTime
       if (last.loc != loc || last.last < now - 100) {
-        map += player -> Entry(loc, player.worldObj.getTotalWorldTime)
+        map += player -> Entry(loc, player.world.getTotalWorldTime)
         true
       } else false
     } else {
-      map += player -> Entry(loc, player.worldObj.getTotalWorldTime)
+      map += player -> Entry(loc, player.world.getTotalWorldTime)
       true
     }
   }

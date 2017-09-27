@@ -21,6 +21,7 @@ import net.bdew.lib.Misc
 import net.bdew.lib.PimpVanilla._
 import net.bdew.lib.helpers.ChatHelper._
 import net.bdew.lib.items.BaseItem
+import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.inventory.EntityEquipmentSlot
@@ -30,14 +31,15 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.{EnumActionResult, EnumFacing, EnumHand}
 import net.minecraft.world.World
 
-object ItemVisualiser extends BaseItem("Visualiser") with ItemLocationStore {
+object ItemVisualiser extends BaseItem("visualiser") with ItemLocationStore {
   setMaxStackSize(1)
 
-  override def onItemUse(stack: ItemStack, player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult = {
+  override def onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float) = {
+    val stack = player.getHeldItem(hand)
     if (!world.isRemote) {
       world.getTileSafe[IGridHost](pos) foreach { tile =>
         setLocation(stack, pos, world.provider.getDimension)
-        player.addChatMessage(L("ae2stuff.visualiser.bound", pos.getX.toString, pos.getY.toString, pos.getZ.toString).setColor(Color.GREEN))
+        player.sendStatusMessage(L("ae2stuff.visualiser.bound", pos.getX.toString, pos.getY.toString, pos.getZ.toString).setColor(Color.GREEN), true)
       }
     }
     EnumActionResult.SUCCESS
@@ -61,7 +63,7 @@ object ItemVisualiser extends BaseItem("Visualiser") with ItemLocationStore {
         setMode(player.inventory.getCurrentItem, mode)
 
         import net.bdew.lib.helpers.ChatHelper._
-        player.addChatMessage(L("ae2stuff.visualiser.set", L("ae2stuff.visualiser.mode." + mode.toString.toLowerCase(Locale.US)).setColor(Color.YELLOW)))
+        player.sendStatusMessage(L("ae2stuff.visualiser.set", L("ae2stuff.visualiser.mode." + mode.toString.toLowerCase(Locale.US)).setColor(Color.YELLOW)), true)
       }
   }
 
@@ -87,7 +89,6 @@ object ItemVisualiser extends BaseItem("Visualiser") with ItemLocationStore {
       grid <- Option(node.getGrid)
     } {
       import scala.collection.JavaConversions._
-      var seen = Set.empty[IGridConnection]
       var connections = Set.empty[IGridConnection]
       val nodes = (for (node <- grid.getNodes) yield {
         val block = node.getGridBlock
@@ -116,8 +117,8 @@ object ItemVisualiser extends BaseItem("Visualiser") with ItemLocationStore {
     }
   }
 
-  override def addInformation(stack: ItemStack, playerIn: EntityPlayer, tooltip: util.List[String], advanced: Boolean): Unit = {
-    super.addInformation(stack, playerIn, tooltip, advanced)
+  override def addInformation(stack: ItemStack, worldIn: World, tooltip: util.List[String], flagIn: ITooltipFlag) = {
+    super.addInformation(stack, worldIn, tooltip, flagIn)
     tooltip.add("%s %s%s".format(
       Misc.toLocal("ae2stuff.visualiser.mode"),
       ChatFormatting.YELLOW,

@@ -9,8 +9,6 @@
 
 package net.bdew.ae2stuff.machines.encoder
 
-import java.util
-
 import appeng.api.networking.events.{MENetworkEventSubscribe, MENetworkPowerStatusChange}
 import appeng.api.networking.storage.IStorageGrid
 import appeng.util.item.AEItemStack
@@ -24,8 +22,8 @@ import net.bdew.lib.tile.inventory.{PersistentInventoryTile, SidedInventory}
 import net.minecraft.block.state.IBlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.{EnumFacing, NonNullList}
 import net.minecraft.world.World
 import net.minecraftforge.oredict.OreDictionary
 
@@ -47,24 +45,24 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
   def getResult = getStackInSlot(slots.result)
 
   override def markDirty() {
-    if (!worldObj.isRemote)
+    if (!world.isRemote)
       inv(slots.encoded) = encodePattern() // direct to prevent an infinite recursion
     super.markDirty()
   }
 
   def encodePattern(): ItemStack = {
-    if (getResult == null || !getRecipe.exists(_ != null) || getStackInSlot(slots.patterns) == null)
-      return null
+    if (getResult.isEmpty || getRecipe.forall(_.isEmpty) || getStackInSlot(slots.patterns).isEmpty)
+      return ItemStack.EMPTY
 
     val newStack = new ItemStack(encodedPattern)
 
     newStack.setTagCompound(
       NBT(
         "in" -> getRecipe.map(x =>
-          if (x == null)
+          if (x.isEmpty)
             new NBTTagCompound
           else
-            NBT.from(x.writeToNBT _)
+            NBT.from(x.writeToNBT)
         ).toList,
         "out" -> List(getResult),
         "crafting" -> true,
@@ -81,8 +79,8 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
     // This is a hack to fix various borked NEI handlers, e.g. IC2
     var allStacks = stacks
     for (x <- stacks if x.getItemDamage == OreDictionary.WILDCARD_VALUE && x.getMaxDamage < x.getItemDamage) {
-      val toAdd = new util.ArrayList[ItemStack]()
-      x.getItem.getSubItems(x.getItem, null, toAdd)
+      val toAdd = NonNullList.create[ItemStack]
+      x.getItem.getSubItems(null, toAdd)
       allStacks = toAdd.toList ++ allStacks
     }
 
@@ -93,7 +91,7 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
       found <- Option(storage.findPrecise(AEItemStack.create(stack)))
     } {
       val copy = found.getItemStack.copy()
-      copy.stackSize = 1
+      copy.setCount(1)
       return copy
     }
 
@@ -119,7 +117,7 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
 
   @MENetworkEventSubscribe
   def networkPowerStatusChange(ev: MENetworkPowerStatusChange): Unit = {
-    BlockEncoder.setActive(worldObj, pos, node.isActive)
+    BlockEncoder.setActive(world, pos, node.isActive)
   }
 
   override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockEncoder

@@ -25,7 +25,5 @@ class ContainerGrower(te: TileGrower, player: EntityPlayer) extends BaseContaine
 
   bindPlayerInventory(player.inventory, 8, 84, 142)
 
-  initUpgradeable(te, te.upgrades, player, 186, 94, addSlotToContainer(_))
-
-  override def canInteractWith(p: EntityPlayer) = te.isUseableByPlayer(p)
+  initUpgradeable(te, te.upgrades, player, 186, 94, addSlotToContainer)
 }

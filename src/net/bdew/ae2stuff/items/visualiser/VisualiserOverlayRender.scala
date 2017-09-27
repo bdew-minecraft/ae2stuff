@@ -61,7 +61,6 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
       GL11.glVertex3d(node.x + 0.5D - SIZE, node.y + 0.5D - SIZE, node.z + 0.5D + SIZE)
       GL11.glVertex3d(node.x + 0.5D - SIZE, node.y + 0.5D - SIZE, node.z + 0.5D - SIZE)
 
-
       setColor(color, 0.8D) // +/- Z
       GL11.glVertex3d(node.x + 0.5D + SIZE, node.y + 0.5D - SIZE, node.z + 0.5D + SIZE)
       GL11.glVertex3d(node.x + 0.5D + SIZE, node.y + 0.5D + SIZE, node.z + 0.5D + SIZE)
@@ -122,7 +121,6 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
           off
         else return
 
-
       val mode = ItemVisualiser.getMode(stack)
 
       GL11.glPushAttrib(GL11.GL_ENABLE_BIT)
@@ -150,7 +148,6 @@ object VisualiserOverlayRender extends WorldOverlayRenderer {
       }
 
       GL11.glCallList(staticList)
-
 
       // Labels are rendered every frame because they need to face the camera
 

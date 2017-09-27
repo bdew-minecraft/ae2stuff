@@ -86,7 +86,7 @@ trait GridTile extends TileExtended with TileTicking with IGridHost with IGridBl
       getNode.getGrid.postEvent(ev)
       true
     } catch {
-      case t: GridAccessException => false
+      case _: GridAccessException => false
     }
   }
 

@@ -19,12 +19,12 @@ class SlotFakeCrafting(inv: IInventory, slot: Int, x: Int, y: Int, onChanged: ()
   override def canTakeStack(p: EntityPlayer) = false
 
   override def onClick(clickType: ClickType, button: Int, player: EntityPlayer): ItemStack = {
-    val newStack = if (player.inventory.getItemStack != null) {
+    val newStack = if (!player.inventory.getItemStack.isEmpty) {
       val stackCopy = player.inventory.getItemStack.copy()
-      stackCopy.stackSize = 1
+      stackCopy.setCount(1)
       stackCopy
     } else {
-      null
+      ItemStack.EMPTY
     }
 
     if (!ItemStack.areItemStacksEqual(newStack, inventory.getStackInSlot(slot))) {
@@ -45,14 +45,14 @@ class SlotFakeEncodedPattern(inv: TileEncoder, slot: Int, x: Int, y: Int) extend
 
   override def onClick(clickType: ClickType, button: Int, player: EntityPlayer): ItemStack = {
     val encoded = inv.getStackInSlot(slot)
-    if (encoded != null) {
+    if (!encoded.isEmpty) {
       if (clickType == ClickType.PICKUP) {
-        if (player.inventory.getItemStack == null) {
+        if (player.inventory.getItemStack.isEmpty) {
           player.inventory.setItemStack(encoded.copy())
           inv.decrStackSize(inv.slots.patterns, 1)
         }
       } else if (clickType == ClickType.QUICK_MOVE) {
-        if (ItemUtils.addStackToSlots(encoded.copy(), player.inventory, 0 until player.inventory.getSizeInventory, true) == null)
+        if (ItemUtils.addStackToSlots(encoded.copy(), player.inventory, 0 until player.inventory.getSizeInventory, true).isEmpty)
           inv.decrStackSize(inv.slots.patterns, 1)
       }
     }

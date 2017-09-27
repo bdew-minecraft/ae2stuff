@@ -90,12 +90,12 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
           // Finished - try to output
           output foreach { toOutput =>
             val oStack = getStackInSlot(slots.output)
-            if (oStack == null || (ItemUtils.isSameItem(oStack, toOutput) && oStack.stackSize + toOutput.stackSize <= oStack.getMaxStackSize)) {
+            if (oStack.isEmpty || (ItemUtils.isSameItem(oStack, toOutput) && oStack.getCount + toOutput.getCount <= oStack.getMaxStackSize)) {
               // Can output - finish process
-              if (oStack == null) {
+              if (oStack.isEmpty) {
                 setInventorySlotContents(slots.output, toOutput)
               } else {
-                oStack.stackSize += toOutput.stackSize
+                oStack.grow(toOutput.getCount)
                 markDirty()
               }
               output.unset()
@@ -132,10 +132,11 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
   def findFinalRecipe: Option[IInscriberRecipe] =
     AEApi.instance().registries().inscriber().getRecipes find isMatchingFullRecipe
 
-  def isMatchingFullRecipe(rec: IInscriberRecipe) = getStackInSlot(slots.middle) != null &&
-    ItemUtils.isSameItem(rec.getTopOptional.orElse(null), getStackInSlot(slots.top)) &&
-    ItemUtils.isSameItem(rec.getBottomOptional.orElse(null), getStackInSlot(slots.bottom)) &&
-    rec.getInputs.exists(rs => ItemUtils.isSameItem(rs, getStackInSlot(slots.middle)))
+  def isMatchingFullRecipe(rec: IInscriberRecipe) =
+    !getStackInSlot(slots.middle).isEmpty &&
+      ItemUtils.isSameItem(rec.getTopOptional.orElse(ItemStack.EMPTY), getStackInSlot(slots.top)) &&
+      ItemUtils.isSameItem(rec.getBottomOptional.orElse(ItemStack.EMPTY), getStackInSlot(slots.bottom)) &&
+      rec.getInputs.exists(rs => ItemUtils.isSameItem(rs, getStackInSlot(slots.middle)))
 
   def isMatchingPartialRecipe(rec: IInscriberRecipe, top: Option[ItemStack], middle: Option[ItemStack], bottom: Option[ItemStack]): Boolean = {
     if (top.isDefined) {
@@ -156,22 +157,24 @@ class TileInscriber extends TileDataSlots with GridTile with SidedInventory with
     AEApi.instance().registries().inscriber().getRecipes.exists(rec => isMatchingPartialRecipe(rec, top, middle, bottom))
   }
 
+  def stackOption(s: ItemStack) = if (s.isEmpty) None else Some(s)
+
   override def isItemValidForSlot(slot: Int, stack: ItemStack) = slot match {
-    case slots.top => isValidPartialRecipe(Some(stack), Option(inv(slots.middle)), Option(inv(slots.bottom)))
-    case slots.middle => isValidPartialRecipe(Option(inv(slots.top)), Some(stack), Option(inv(slots.bottom)))
-    case slots.bottom => isValidPartialRecipe(Option(inv(slots.top)), Option(inv(slots.middle)), Some(stack))
+    case slots.top => isValidPartialRecipe(Some(stack), stackOption(inv(slots.middle)), stackOption(inv(slots.bottom)))
+    case slots.middle => isValidPartialRecipe(stackOption(inv(slots.top)), Some(stack), stackOption(inv(slots.bottom)))
+    case slots.bottom => isValidPartialRecipe(stackOption(inv(slots.top)), stackOption(inv(slots.middle)), Some(stack))
     case _ => false
   }
 
   override def canExtractItem(slot: Int, stack: ItemStack, side: EnumFacing) = slot match {
     case slots.output => true
-    case slots.top => (!topLocked) && output.isDefined && inv(slots.middle) == null
-    case slots.bottom => (!bottomLocked) && output.isDefined && inv(slots.middle) == null
+    case slots.top => (!topLocked) && output.isDefined && inv(slots.middle).isEmpty
+    case slots.bottom => (!bottomLocked) && output.isDefined && inv(slots.middle).isEmpty
     case _ => false
   }
 
   override def shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newSate: IBlockState): Boolean = newSate.getBlock != BlockInscriber
 
-  onWake.listen(() => BlockInscriber.setActive(worldObj, pos, true))
-  onSleep.listen(() => BlockInscriber.setActive(worldObj, pos, false))
+  onWake.listen(() => BlockInscriber.setActive(world, pos, true))
+  onSleep.listen(() => BlockInscriber.setActive(world, pos, false))
 }

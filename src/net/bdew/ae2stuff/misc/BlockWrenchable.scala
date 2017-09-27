@@ -21,8 +21,8 @@ import net.minecraft.world.World
 trait BlockWrenchable extends Block {
   def onBlockActivatedReal(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, heldItem: ItemStack, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean
 
-  override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, heldItem: ItemStack, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
-    if (super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ)) return true
+  override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
+    if (super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ)) return true
     if (player.isSneaking) {
       for {
         stack <- Option(player.inventory.getCurrentItem)
@@ -35,7 +35,7 @@ trait BlockWrenchable extends Block {
       false
     } else {
       if (!world.isRemote)
-        onBlockActivatedReal(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ)
+        onBlockActivatedReal(world, pos, state, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ)
       else
         true
     }

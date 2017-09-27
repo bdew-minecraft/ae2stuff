@@ -35,9 +35,9 @@ trait BlockActiveTexture extends BaseBlock {
 
   //noinspection ScalaDeprecation
   override def getStateFromMeta(meta: Int): IBlockState =
-  if ((meta & 1) == 1)
-    super.getStateFromMeta(meta).withProperty(BlockActiveTexture.Active, Boolean.box(true))
-  else
-    super.getStateFromMeta(meta).withProperty(BlockActiveTexture.Active, Boolean.box(false))
+    if ((meta & 1) == 1)
+      super.getStateFromMeta(meta).withProperty(BlockActiveTexture.Active, Boolean.box(true))
+    else
+      super.getStateFromMeta(meta).withProperty(BlockActiveTexture.Active, Boolean.box(false))
 }
 

@@ -19,8 +19,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.8"
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.9"
     }
 }
 
@@ -69,8 +69,8 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
     maven {
-        name "waila"
-        url "http://mobiusstrip.eu/maven"
+        name "HWYLA"
+        url "http://tehnut.info/maven"
     }
     ivy {
         name "AE2"
@@ -82,7 +82,7 @@ dependencies {
     compile "net.bdew:bdlib:${config.bdlib.version}-mc${config.minecraft.version}:dev"
 
     deobfCompile "mezz.jei:jei_${config.minecraft.version}:${config.jei.version}"
-    deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
+    deobfCompile "mcp.mobius.waila:Hwyla:${config.hwyla.version}"
 
     deobfCompile ":appliedenergistics2:${config.ae2.version}@jar"
 
@@ -164,6 +164,9 @@ curseforge {
         changelog = project.hasProperty("changelog") ? project.changelog : "No changelog available"
 
         addGameVersion config.minecraft.version
+        addGameVersion "1.12"
+        addGameVersion "1.12.2"
+
 
         mainArtifact(jar) {
             displayName = "AE2Stuff ${simpleVersion} (MC ${config.minecraft.version})"

@@ -1,10 +1,10 @@
-tile.ae2stuff.Encoder.name=Encodeur de modèle
-tile.ae2stuff.Grower.name=Chambre de croissance du crystal
-tile.ae2stuff.Inscriber.name=Inscriveur avancé
-tile.ae2stuff.Wireless.name=Connecteur sans-fil
+tile.ae2stuff.encoder.name=Encodeur de modèle
+tile.ae2stuff.grower.name=Chambre de croissance du crystal
+tile.ae2stuff.inscriber.name=Inscriveur avancé
+tile.ae2stuff.wireless.name=Connecteur sans-fil
 
-item.ae2stuff.WirelessKit.name=kit de configuration sans-fil
-item.ae2stuff.Visualiser.name=Outils de visualisation du réseau
+item.ae2stuff.wireless_kit.name=kit de configuration sans-fil
+item.ae2stuff.visualiser.name=Outils de visualisation du réseau
 
 ae2stuff.error.not_connected=Réseau non connecté
 

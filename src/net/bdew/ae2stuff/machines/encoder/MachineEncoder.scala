@@ -16,7 +16,6 @@ import net.bdew.lib.gui.GuiProvider
 import net.bdew.lib.machine.Machine
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object MachineEncoder extends Machine("Encoder", BlockEncoder) with GuiProvider {
@@ -33,11 +32,11 @@ object MachineEncoder extends Machine("Encoder", BlockEncoder) with GuiProvider 
     case (MsgSetRecipe(data), player) =>
       Misc.asInstanceOpt(player.openContainer, classOf[ContainerEncoder]).foreach { cont =>
         for ((slotNum, recIdx) <- cont.te.slots.recipe.zipWithIndex) {
-          val items = data.tag.getList[NBTTagCompound](slotNum.toString) map ItemStack.loadItemStackFromNBT
+          val items = data.tag.getList[ItemStack](slotNum.toString)
           if (items.nonEmpty)
             cont.te.setInventorySlotContents(recIdx, cont.te.findMatchingRecipeStack(items))
           else
-            cont.te.setInventorySlotContents(recIdx, null)
+            cont.te.setInventorySlotContents(recIdx, ItemStack.EMPTY)
         }
         cont.updateRecipe()
       }

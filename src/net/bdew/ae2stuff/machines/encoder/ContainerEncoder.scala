@@ -32,7 +32,7 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
     val c = new InventoryCrafting(this, 3, 3)
     for (i <- 0 until 9)
       c.setInventorySlotContents(i, te.getStackInSlot(te.slots.recipe(i)))
-    val r = CraftingManager.getInstance.findMatchingRecipe(c, te.getWorld)
+    val r = CraftingManager.findMatchingResult(c, te.getWorld)
     te.setInventorySlotContents(te.slots.result, r)
   }
 
@@ -44,17 +44,17 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
         val playerStack = player.inventory.getItemStack
         val slotStack = slot.getStack
         if (AE2Defs.items.encodedPattern().isSameAs(playerStack)) {
-          if (slotStack == null) {
-            slot.putStack(AE2Defs.materials.blankPattern().maybeStack(playerStack.stackSize).get())
-            player.inventory.setItemStack(null)
+          if (slotStack.isEmpty) {
+            slot.putStack(AE2Defs.materials.blankPattern().maybeStack(playerStack.getCount).get())
+            player.inventory.setItemStack(ItemStack.EMPTY)
             detectAndSendChanges()
-            return null
-          } else if (slotStack.stackSize + playerStack.stackSize <= slotStack.getMaxStackSize) {
-            slotStack.stackSize += playerStack.stackSize
+            return ItemStack.EMPTY
+          } else if (slotStack.getCount + playerStack.getCount <= slotStack.getMaxStackSize) {
+            slotStack.grow(playerStack.getCount)
             slot.onSlotChanged()
-            player.inventory.setItemStack(null)
+            player.inventory.setItemStack(ItemStack.EMPTY)
             detectAndSendChanges()
-            return null
+            return ItemStack.EMPTY
           }
         }
       }
@@ -75,15 +75,15 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
     val clickedStack = fromSlot.getStack
     if (fromSlot.inventory == player.inventory && AE2Defs.items.encodedPattern().isSameAs(clickedStack)) {
       val patternStack = patternSlot.getStack
-      if (patternStack == null) {
-        patternSlot.putStack(AE2Defs.materials.blankPattern().maybeStack(clickedStack.stackSize).get())
-        fromSlot.putStack(null)
-        return null
-      } else if (patternStack.stackSize + clickedStack.stackSize <= patternStack.getMaxStackSize) {
-        patternStack.stackSize += clickedStack.stackSize
+      if (patternStack.isEmpty) {
+        patternSlot.putStack(AE2Defs.materials.blankPattern().maybeStack(clickedStack.getCount).get())
+        fromSlot.putStack(ItemStack.EMPTY)
+        return ItemStack.EMPTY
+      } else if (patternStack.getCount + clickedStack.getCount <= patternStack.getMaxStackSize) {
+        patternStack.grow(clickedStack.getCount)
         patternSlot.onSlotChanged()
-        fromSlot.putStack(null)
-        return null
+        fromSlot.putStack(ItemStack.EMPTY)
+        return ItemStack.EMPTY
       }
     }
     super.transferStackInSlot(player, slot)
@@ -97,6 +97,4 @@ class ContainerEncoder(val te: TileEncoder, player: EntityPlayer) extends BaseCo
       }
     }
   }
-
-  override def canInteractWith(player: EntityPlayer) = te.isUseableByPlayer(player)
 }

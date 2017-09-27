@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
-object BlockInscriber extends BaseBlock("Inscriber", MachineMaterial) with HasTE[TileInscriber] with BlockKeepData with BlockWrenchable with BlockActiveTexture {
+object BlockInscriber extends BaseBlock("inscriber", MachineMaterial) with HasTE[TileInscriber] with BlockKeepData with BlockWrenchable with BlockActiveTexture {
   override val TEClass = classOf[TileInscriber]
 
   setHardness(1)

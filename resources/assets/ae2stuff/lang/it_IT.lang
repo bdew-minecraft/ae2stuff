@@ -1,6 +1,6 @@
 
-tile.ae2stuff.Encoder.name=Codificatore di Modelli
-tile.ae2stuff.Grower.name=Camera per la crescita dei Cristalli
+tile.ae2stuff.encoder.name=Codificatore di Modelli
+tile.ae2stuff.grower.name=Camera per la crescita dei Cristalli
 
 ae2stuff.error.not_connected=Non connesso alla rete
 

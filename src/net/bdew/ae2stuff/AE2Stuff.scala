@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry
 import net.minecraftforge.fml.relauncher.Side
 import org.apache.logging.log4j.Logger
 
-@Mod(modid = AE2Stuff.modId, version = "AE2STUFF_VER", name = "AE2 Stuff", dependencies = "required-after:appliedenergistics2;required-after:bdlib@[BDLIB_VER,)", modLanguage = "scala")
+@Mod(modid = AE2Stuff.modId, version = "AE2STUFF_VER", name = "AE2 Stuff", dependencies = "required-after:appliedenergistics2;required-after:bdlib@[BDLIB_VER,)", acceptedMinecraftVersions = "[1.12,1.12.2]", modLanguage = "scala")
 object AE2Stuff {
   var log: Logger = null
   var instance = this
@@ -51,6 +51,9 @@ object AE2Stuff {
     TuningLoader.loadConfigFiles()
     Machines.load()
     Items.load()
+    if (event.getSide == Side.CLIENT) {
+      Icons.init()
+    }
   }
 
   @EventHandler
@@ -58,14 +61,13 @@ object AE2Stuff {
     NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler)
     NetHandler.init()
     if (event.getSide == Side.CLIENT) {
-      Icons.init()
       OverlayRenderHandler.register(WirelessOverlayRender)
       OverlayRenderHandler.register(VisualiserOverlayRender)
       MouseEventHandler.init()
     }
     VisualiserPlayerTracker.init()
     WrenchRegistry.init()
-    FMLInterModComms.sendMessage("Waila", "register", "net.bdew.ae2stuff.waila.WailaHandler.loadCallback")
+    FMLInterModComms.sendMessage("waila", "register", "net.bdew.ae2stuff.waila.WailaHandler.loadCallback")
   }
 
   val onPostInit = Event[FMLPostInitializationEvent]

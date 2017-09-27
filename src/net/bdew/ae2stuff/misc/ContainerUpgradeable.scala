@@ -30,7 +30,7 @@ trait ContainerUpgradeable extends BaseContainer {
 
     netToolObj foreach { nt =>
       for (i <- 0 until 3; j <- 0 until 3) {
-        astc(new SlotValidating(nt, i + j * 3, baseX + i * 18, baseY + j * 18))
+        astc(new SlotValidating(new InventoryHandlerAdapter(nt.getInventory), i + j * 3, baseX + i * 18, baseY + j * 18))
       }
     }
   }
@@ -42,14 +42,14 @@ trait ContainerUpgradeable extends BaseContainer {
     if (netToolObj.contains(getSlot(slot).inventory)) {
       // Moving from the net tool - move into upgrades inv
       getSlot(slot).putStack(ItemUtils.addStackToSlots(stack, upgradeInventory, 0 until upgradeInventory.getSizeInventory, true))
-    } else if (stack != null && stack.getItem.isInstanceOf[IUpgradeModule] && stack.getItem.asInstanceOf[IUpgradeModule].getType(stack) != null) {
+    } else if (!stack.isEmpty && stack.getItem.isInstanceOf[IUpgradeModule] && stack.getItem.asInstanceOf[IUpgradeModule].getType(stack) != null) {
       // Is an upgrade
       if (getSlot(slot).inventory != upgradeInventory) {
         // If it's not in upgrade inventory try to move it there
         getSlot(slot).putStack(ItemUtils.addStackToSlots(stack, upgradeInventory, 0 until upgradeInventory.getSizeInventory, true))
       } else if (netToolObj.isDefined) {
         // Otherwise if we have a network tool, move it there
-        getSlot(slot).putStack(ItemUtils.addStackToSlots(stack, netToolObj.get, 0 until netToolObj.get.getSizeInventory, true))
+        getSlot(slot).putStack(ItemUtils.addStackToHandler(stack, netToolObj.get.getInventory))
       } else {
         // Otherwise let the default handler move it to player inventory
         super.transferStackInSlot(player, slot)
@@ -58,16 +58,18 @@ trait ContainerUpgradeable extends BaseContainer {
       // Otherwise let the default handler work
       super.transferStackInSlot(player, slot)
     }
-    null
+    ItemStack.EMPTY
   }
 
   override def slotClick(slotNum: Int, button: Int, clickType: ClickType, player: EntityPlayer): ItemStack = {
     if (slotNum > 0 && slotNum < inventorySlots.size() && netToolSlot.isDefined) {
       val slot = getSlot(slotNum)
       if (slot.isHere(player.inventory, netToolSlot.get))
-        return null
+        return ItemStack.EMPTY
     }
-    if (clickType == ClickType.SWAP && netToolSlot.contains(button)) return null
-    super.slotClick(slotNum, button, clickType, player)
+    if (clickType == ClickType.SWAP && netToolSlot.contains(button))
+      ItemStack.EMPTY
+    else
+      super.slotClick(slotNum, button, clickType, player)
   }
 }

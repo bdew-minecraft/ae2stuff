@@ -1,10 +1,10 @@
-tile.ae2stuff.Encoder.name=Кодировщик шаблонов
-tile.ae2stuff.Grower.name=Камера выращивания кристаллов
-tile.ae2stuff.Inscriber.name=Продвинутый высекатель
-tile.ae2stuff.Wireless.name=Беспроводной соединитель
+tile.ae2stuff.encoder.name=Кодировщик шаблонов
+tile.ae2stuff.grower.name=Камера выращивания кристаллов
+tile.ae2stuff.inscriber.name=Продвинутый высекатель
+tile.ae2stuff.wireless.name=Беспроводной соединитель
 
-item.ae2stuff.WirelessKit.name=Беспроводной комплект настройки
-item.ae2stuff.Visualiser.name=Инструмент визуализации сети
+item.ae2stuff.wireless_kit.name=Беспроводной комплект настройки
+item.ae2stuff.visualiser.name=Инструмент визуализации сети
 
 ae2stuff.error.not_connected=Нет соединения с сетью
 

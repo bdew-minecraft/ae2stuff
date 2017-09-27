@@ -28,7 +28,7 @@ object MouseEventHandler {
     val player = Client.player
     if (player == null || !player.isSneaking) return
     val stack = player.inventory.getCurrentItem
-    if (stack == null || stack.getItem == null) return
+    if (stack.isEmpty) return
     if (stack.getItem == ItemVisualiser) {
       val newMode =
         if (ev.getDwheel.signum > 0)

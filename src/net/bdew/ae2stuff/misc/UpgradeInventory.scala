@@ -20,7 +20,7 @@ import net.minecraft.nbt.NBTTagCompound
 class UpgradeInventory(name: String, parent: TileDataSlots, size: Int, kinds: Set[Upgrades]) extends DataSlotInventory(name, parent, size) {
   override def getInventoryStackLimit() = 1
   override def isItemValidForSlot(slot: Int, stack: ItemStack): Boolean =
-    if (stack != null && stack.getItem.isInstanceOf[IUpgradeModule])
+    if (!stack.isEmpty && stack.getItem.isInstanceOf[IUpgradeModule])
       kinds.contains(stack.getItem.asInstanceOf[IUpgradeModule].getType(stack))
     else false
 
@@ -28,7 +28,7 @@ class UpgradeInventory(name: String, parent: TileDataSlots, size: Int, kinds: Se
 
   def updateUpgradeCounts() =
     cards = inv filter { x =>
-      x != null && x.getItem.isInstanceOf[IUpgradeModule]
+      !x.isEmpty && x.getItem.isInstanceOf[IUpgradeModule]
     } map { x =>
       x.getItem.asInstanceOf[IUpgradeModule].getType(x)
     } groupBy identity mapValues (_.length) withDefaultValue 0
@@ -45,10 +45,10 @@ class UpgradeInventory(name: String, parent: TileDataSlots, size: Int, kinds: Se
 
   def dropInventory(): Unit = {
     if (parent.getWorldObject != null && !parent.getWorld.isRemote) {
-      for (stack <- inv if stack != null) {
+      for (stack <- inv if !stack.isEmpty) {
         ItemUtils.throwItemAt(parent.getWorld, parent.getPos, stack)
       }
-      inv = new Array[ItemStack](inv.length)
+      clear()
     }
   }
 }

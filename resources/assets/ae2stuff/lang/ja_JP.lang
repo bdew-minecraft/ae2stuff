@@ -1,11 +1,11 @@
 #ja_JP
-tile.ae2stuff.Encoder.name=パターンエンコーダ
-tile.ae2stuff.Grower.name=クリスタル成長機
-tile.ae2stuff.Inscriber.name=発展型刻印機
-tile.ae2stuff.Wireless.name=無線コネクタ
+tile.ae2stuff.encoder.name=パターンエンコーダ
+tile.ae2stuff.grower.name=クリスタル成長機
+tile.ae2stuff.inscriber.name=発展型刻印機
+tile.ae2stuff.wireless.name=無線コネクタ
 
-item.ae2stuff.WirelessKit.name=無線設定キット
-item.ae2stuff.Visualiser.name=ネットワーク可視化ツール
+item.ae2stuff.wireless_kit.name=無線設定キット
+item.ae2stuff.visualiser.name=ネットワーク可視化ツール
 
 ae2stuff.error.not_connected=ネットワークに接続されていません
 

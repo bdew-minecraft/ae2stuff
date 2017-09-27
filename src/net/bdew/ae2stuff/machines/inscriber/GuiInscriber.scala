@@ -26,7 +26,7 @@ class GuiInscriber(cont: ContainerInscriber) extends BaseScreen(cont, if (cont.h
 
   override def initGui() {
     super.initGui()
-    widgets.add(new WidgetLabel(Misc.toLocal("tile.ae2stuff.Inscriber.name"), 8, 6, Color.darkGray))
+    widgets.add(new WidgetLabel(BlockInscriber.getLocalizedName, 8, 6, Color.darkGray))
     widgets.add(new WidgetLabel(Misc.toLocal("container.inventory"), 8, this.ySize - 96 + 3, Color.darkGray))
     widgets.add(new WidgetFillDataSlot(new Rect(135, 39, 6, 18), AE2Textures.inscriberProgress, Direction.UP, cont.te.progress, 1F) {
       override def handleTooltip(p: Point, tip: mutable.MutableList[String]) = tip += "%.0f".format(cont.te.progress * 100) + "%"

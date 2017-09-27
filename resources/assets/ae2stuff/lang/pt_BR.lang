@@ -1,6 +1,6 @@
-tile.ae2stuff.Encoder.name=Codificador de Padrões
-tile.ae2stuff.Grower.name=Câmara de Crescimento de Cristais
-tile.ae2stuff.Inscriber.name=Inscritor Avançado
+tile.ae2stuff.encoder.name=Codificador de Padrões
+tile.ae2stuff.grower.name=Câmara de Crescimento de Cristais
+tile.ae2stuff.inscriber.name=Inscritor Avançado
 
 ae2stuff.error.not_connected=Rede não conectada
 
