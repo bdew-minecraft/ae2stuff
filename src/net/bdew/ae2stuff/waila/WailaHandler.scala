@@ -1,5 +1,5 @@
 /*
- * Copyright (c) bdew, 2014 - 2015
+ * Copyright (c) bdew, 2014 - 2017
  * https://github.com/bdew/ae2stuff
  *
  * This mod is distributed under the terms of the Minecraft Mod Public
