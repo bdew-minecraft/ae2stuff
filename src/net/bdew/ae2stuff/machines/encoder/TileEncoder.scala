@@ -93,12 +93,12 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
       stack <- allStacks
       found <- Option(storage.findPrecise(channel.createStack(stack)))
     } {
-      val copy = found.createItemStack().copy()
-      copy.setCount(1)
-      return copy
+      val stack = found.createItemStack()
+      stack.setCount(1)
+      return stack
     }
 
-    // Get the virst variant if we can't find any matches
+    // Get the first variant if we can't find any matches
     allStacks.head
   }
 
