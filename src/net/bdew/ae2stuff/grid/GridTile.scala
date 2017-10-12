@@ -47,7 +47,7 @@ trait GridTile extends TileExtended with TileTicking with IGridHost with IGridBl
   persistLoad.listen((tag) => {
     if (FMLCommonHandler.instance().getEffectiveSide.isServer) {
       unRegisterNode()
-      node = AEApi.instance().createGridNode(this)
+      node = AEApi.instance().grid().createGridNode(this)
       if (tag.hasKey("ae_node"))
         node.loadFromNBT("ae_node", tag)
     }
@@ -76,7 +76,7 @@ trait GridTile extends TileExtended with TileTicking with IGridHost with IGridBl
     if (getWorld == null || getWorld.isRemote) null
     else {
       if (node == null)
-        node = AEApi.instance().createGridNode(this)
+        node = AEApi.instance().grid().createGridNode(this)
       node
     }
   }

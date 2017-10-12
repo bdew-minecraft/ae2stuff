@@ -60,7 +60,7 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
   def setupConnection(): Boolean = {
     getLink foreach { that =>
       try {
-        connection = AEApi.instance().createGridConnection(this.getNode, that.getNode)
+        connection = AEApi.instance().grid().createGridConnection(this.getNode, that.getNode)
         that.connection = connection
         val power = cfg.powerBase + cfg.powerDistanceMultiplier * this.pos.distanceSq(that.pos)
         this.setIdlePowerUse(power)

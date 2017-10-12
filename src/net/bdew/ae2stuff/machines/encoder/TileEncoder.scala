@@ -9,9 +9,11 @@
 
 package net.bdew.ae2stuff.machines.encoder
 
+import appeng.api.AEApi
 import appeng.api.networking.events.{MENetworkEventSubscribe, MENetworkPowerStatusChange}
 import appeng.api.networking.storage.IStorageGrid
-import appeng.util.item.AEItemStack
+import appeng.api.storage.channels.IItemStorageChannel
+import appeng.api.storage.data.IAEItemStack
 import net.bdew.ae2stuff.AE2Defs
 import net.bdew.ae2stuff.grid.GridTile
 import net.bdew.lib.PimpVanilla._
@@ -84,13 +86,14 @@ class TileEncoder extends TileExtended with GridTile with PersistentInventoryTil
       allStacks = toAdd.toList ++ allStacks
     }
 
-    val storage = node.getGrid.getCache[IStorageGrid](classOf[IStorageGrid]).getItemInventory.getStorageList
+    val channel = AEApi.instance().storage().getStorageChannel[IAEItemStack, IItemStorageChannel](classOf[IItemStorageChannel])
+    val storage = node.getGrid.getCache[IStorageGrid](classOf[IStorageGrid]).getInventory(channel).getStorageList
 
     for {
       stack <- allStacks
-      found <- Option(storage.findPrecise(AEItemStack.create(stack)))
+      found <- Option(storage.findPrecise(channel.createStack(stack)))
     } {
-      val copy = found.getItemStack.copy()
+      val copy = found.createItemStack().copy()
       copy.setCount(1)
       return copy
     }
