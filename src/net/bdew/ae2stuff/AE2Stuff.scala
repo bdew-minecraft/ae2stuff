@@ -68,13 +68,13 @@ object AE2Stuff {
     VisualiserPlayerTracker.init()
     WrenchRegistry.init()
     FMLInterModComms.sendMessage("waila", "register", "net.bdew.ae2stuff.waila.WailaHandler.loadCallback")
+    TuningLoader.loadDelayed()
   }
 
   val onPostInit = Event[FMLPostInitializationEvent]
 
   @EventHandler
   def postInit(event: FMLPostInitializationEvent) {
-    TuningLoader.loadDelayed()
     onPostInit.trigger(event)
   }
 
