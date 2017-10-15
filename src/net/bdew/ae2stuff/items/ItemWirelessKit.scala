@@ -12,7 +12,7 @@ package net.bdew.ae2stuff.items
 import java.util
 
 import appeng.api.config.SecurityPermissions
-import appeng.api.exceptions.FailedConnection
+import appeng.api.exceptions.FailedConnectionException
 import net.bdew.ae2stuff.grid.Security
 import net.bdew.ae2stuff.machines.wireless.{BlockWireless, TileWireless}
 import net.bdew.ae2stuff.misc.ItemLocationStore
@@ -87,7 +87,7 @@ object ItemWirelessKit extends BaseItem("wireless_kit") with ItemLocationStore {
                           player.sendStatusMessage(L("ae2stuff.wireless.tool.failed").setColor(Color.RED), true)
                         }
                       } catch {
-                        case e: FailedConnection =>
+                        case e: FailedConnectionException =>
                           player.sendMessage((L("ae2stuff.wireless.tool.failed") & ": " & e.getMessage).setColor(Color.RED))
                           tile.doUnlink()
                       }
