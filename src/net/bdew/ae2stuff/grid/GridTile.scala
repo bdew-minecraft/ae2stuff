@@ -94,10 +94,8 @@ trait GridTile extends TileExtended with TileTicking with IGridHost with IGridBl
   override def getGridNode(aePartLocation: AEPartLocation): IGridNode = getNode
   override def getCableConnectionType(aePartLocation: AEPartLocation): AECableType = AECableType.COVERED
   override def securityBreak() = {
-    ItemUtils.throwItemAt(getWorld, getPos, new ItemStack(getBlockType))
-    if (this.isInstanceOf[BreakableInventoryTile])
-      this.asInstanceOf[BreakableInventoryTile].dropItems()
-    getWorld.setBlockToAir(getPos)
+	  //Dont do anything here to work around this bug https://github.com/bdew/ae2stuff/issues/190
+	  //This does change the intended behavior of this method but the block will not connect to the AE network, thus not breaking the security of the ae network
   }
 
   // IGridBlock
