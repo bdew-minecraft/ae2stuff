@@ -1,0 +1,46 @@
+#ja_JP
+tile.ae2stuff.Encoder.name=パターンエンコーダ
+tile.ae2stuff.Grower.name=クリスタル成長機
+tile.ae2stuff.Inscriber.name=発展型刻印機
+tile.ae2stuff.Wireless.name=無線コネクタ
+
+item.ae2stuff.WirelessKit.name=無線設定キット
+item.ae2stuff.Visualiser.name=ネットワーク可視化ツール
+
+ae2stuff.error.not_connected=ネットワークに接続されていません
+
+ae2stuff.waila.sleep.true=オフライン
+ae2stuff.waila.sleep.false=オンライン
+ae2stuff.waila.power=%s / %s AE
+
+ae2stuff.waila.wireless.connected=%s,%s,%s と接続中
+ae2stuff.waila.wireless.notconnected=未接続
+ae2stuff.waila.wireless.channels=チャンネル数: %s
+ae2stuff.waila.wireless.power=消費パワー: %s AE/t
+
+ae2stuff.gui.lock.on=ロック - 中身を維持します
+ae2stuff.gui.lock.off=アンロック - 中身を維持しません
+ae2stuff.gui.lock.note=素材が無くなるまでクラフトします
+
+ae2stuff.gui.recipes=レシピ
+
+ae2stuff.wireless.tool.empty=無線コネクタと接続するのに使います
+ae2stuff.wireless.tool.bound1=接続 %s,%s,%s
+ae2stuff.wireless.tool.bound2=接続する為に、他の無線コネクタをクリックします
+ae2stuff.wireless.tool.connected=%s,%s,%s と接続しました
+ae2stuff.wireless.tool.failed=接続に失敗しました
+ae2stuff.wireless.tool.dimension=コネクタ同士は同じディメンションである必要があります
+ae2stuff.wireless.tool.noexist=接続先のコネクタが存在しません
+ae2stuff.wireless.tool.security.network=セキュリティ違反 - ネットワークに接続できません
+ae2stuff.wireless.tool.security.player=セキュリティ違反 - あなたはこのネットワークを変更することはできません
+
+ae2stuff.visualiser.bound=%s,%s,%s のネットワークを視覚化
+ae2stuff.visualiser.mode=モード:
+ae2stuff.visualiser.set=モード切替 %s
+ae2stuff.visualiser.mode.full=全て表示
+ae2stuff.visualiser.mode.nodes=ノードを表示
+ae2stuff.visualiser.mode.channels=チャンネル図を表示
+ae2stuff.visualiser.mode.nonum=チャンネル図とノードを表示
+ae2stuff.visualiser.mode.p2p=P2Pを表示
+
+itemGroup.bdew.ae2stuff=AE2 Stuff
