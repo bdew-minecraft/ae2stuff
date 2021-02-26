@@ -38,11 +38,7 @@ if (project.hasProperty('forgeOverride')) {
     config.forge.version = forgeOverride
 }
 
-if (project.hasProperty('buildnum')) {
-    ext.simpleVersion = "${config.ae2stuff.version}.${project.buildnum}"
-} else {
-    ext.simpleVersion = "${config.ae2stuff.version}-DEV"
-}
+ext.simpleVersion = "${config.ae2stuff.version}"
 
 version = simpleVersion + '-mc' + config.minecraft.version
 
