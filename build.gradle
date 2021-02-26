@@ -4,7 +4,6 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        mavenLocal()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
@@ -13,14 +12,21 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            url = "https://jitpack.io"
+	    }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: 'forge'
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.additionalParameters = ["-deprecation:false"]
+}
 
 file "build.properties" withReader {
     def prop = new Properties()
@@ -50,26 +56,32 @@ minecraft {
 }
 
 repositories {
-    mavenCentral()
     maven {
         name = "bdew"
-        url = "http://jenkins.bdew.net/maven"
+        url = "https://jenkins.bdew.net/maven"
     }
     maven {
         name = "chickenbones"
-        url = "http://chickenbones.net/maven"
+        url = "http://chickenbones.net/maven/"
     }
     maven {
         name "waila"
         url "http://mobiusstrip.eu/maven"
     }
-    ivy {
-        name "CoFHLib"
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhlib.cf}/[module]-[revision](-[classifier])(.[ext])"
+    
+	ivy {
+        name = 'gtnh_download_source_stupid_underscore_typo'
+        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]")
     }
+
+	ivy {
+        name = 'gtnh_download_source'
+        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
+    }
+
     ivy {
         name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+        artifactPattern "https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
 }
 
@@ -81,7 +93,7 @@ dependencies {
     compile "codechicken:CodeChickenCore:${config.minecraft.version}-${config.ccc.version}:dev"
 
     compile "com.mod-buildcraft:buildcraft:${config.buildcraft.version}:dev"
-    compile ":CoFHLib:${config.cofhlib.version}:dev@jar"
+    compileOnly name: 'CoFHLib', version: config.cofhlib.version, ext: 'jar'
 
     compile module("mcp.mobius.waila:Waila:${config.waila.version}_${config.minecraft.version}") {
         transitive = false // WAILA is depending on an invalid combination of CCC/NEI that doesn't run...
@@ -102,7 +114,6 @@ sourceSets {
         resources {
             srcDir 'resources'
         }
-        output.resourcesDir = output.classesDir // Hack for IDEA
     }
 }
 
@@ -160,22 +171,3 @@ publishing {
     }
 }
 
-
-apply plugin: 'curseforge'
-
-curse {
-    projectId = config.curseforge.id
-    apiKey = project.hasProperty("curseForgeApiKey") ? project.curseForgeApiKey : ""
-    releaseType = 'alpha'
-
-    artifact = jar
-    changelog = project.hasProperty("changelog") ? project.changelog : "No changelog available"
-
-    additionalArtifact deobfJar
-    additionalArtifact sourceJar
-
-    relatedProject 'bdlib': 'requiredLibrary'
-    relatedProject 'applied-energistics-2': 'requiredLibrary'
-    relatedProject 'notenoughitems': 'optionalLibrary'
-    relatedProject 'waila': 'optionalLibrary'
-}
