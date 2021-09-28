@@ -71,7 +71,9 @@ class TileWireless extends TileDataSlots with GridTile with VariableIdlePower {
       val dx = this.xCoord - that.xCoord
       val dy = this.yCoord - that.yCoord
       val dz = this.zCoord - that.zCoord
-      val power = cfg.powerBase + cfg.powerDistanceMultiplier * (dx * dx + dy * dy + dz * dz)
+      //val power = cfg.powerBase + cfg.powerDistanceMultiplier * (dx * dx + dy * dy + dz * dz)
+      val dist = math.sqrt(dx * dx + dy * dy + dz * dz)
+      val power = cfg.powerBase + cfg.powerDistanceMultiplier * dist * math.log(dist * dist + 3)
       this.setIdlePowerUse(power)
       that.setIdlePowerUse(power)
       worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 3)
