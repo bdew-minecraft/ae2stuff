@@ -1,9 +1,10 @@
 [
 {
-  "modid": "ae2stuff",
-  "name": "AE2 Stuff",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "",
-  "version": "@AE2STUFF_VER@",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "bdew.net",
   "updateUrl": "",
   "authorList": [

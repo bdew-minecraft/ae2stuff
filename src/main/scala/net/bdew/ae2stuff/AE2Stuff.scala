@@ -25,7 +25,7 @@ import net.bdew.lib.Event
 import net.bdew.lib.gui.GuiHandler
 import org.apache.logging.log4j.Logger
 
-@Mod(modid = AE2Stuff.modId, version = "AE2STUFF_VER", name = "AE2 Stuff", dependencies = "required-after:appliedenergistics2;required-after:bdlib@[BDLIB_VER,)", modLanguage = "scala")
+@Mod(modid = AE2Stuff.modId, version = "GRADLETOKEN_VERSION", name = "AE2 Stuff", dependencies = "required-after:appliedenergistics2;required-after:bdlib@[1.9.4.109,)", modLanguage = "scala")
 object AE2Stuff {
   var log: Logger = null
   var instance = this
